@@ -17,5 +17,8 @@ jobs:
     - name: Install OS packages
       run: sudo apt-get install python3-tk
 
+    - name: Setup application
+      run: make setup
+
     - name: Run tests
       run: make test
