@@ -16,6 +16,9 @@ jobs:
 
     - name: Install OS packages
       run: sudo apt-get install python3-tk
+      
+    - name: Set DISPLAY for TK
+      run: export DISPLAY=localhost:0.0
 
     - name: Setup application
       run: make setup
