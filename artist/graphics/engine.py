@@ -1,5 +1,7 @@
 import abc
+import datetime
 from enum import Enum
+import os
 import turtle
 
 from PIL import Image
@@ -29,9 +31,14 @@ class TurtleEngine(EngineInterface):
     self.turtle.speed(10)
     self.turtle.hideturtle()
 
+    self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
+    os.makedirs(os.path.dirname(self.output_filepath), exist_ok=True)
+    print(self.output_filepath)
 
-  def save_image(self, output_filename: str):
+  def save_image(self):
+    output_filepath = f'{self.output_filepath}.jpg'
     canvas = self.screen.getcanvas()
-    canvas.postscript(file=f'{output_filename}.eps')
-    img = Image.open(f'{output_filename}.eps')
-    img.save(f'{output_filename}.jpg')
+    canvas.postscript(file=f'{self.output_filepath}.eps')
+    with Image.open(f'{self.output_filepath}.eps') as img:
+      img.save(output_filepath)
+    return output_filepath
