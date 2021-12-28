@@ -14,5 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install OS packages
+      run: sudo apt-get install python3-tk
+
     - name: Run tests
       run: make test
