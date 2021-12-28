@@ -6,6 +6,7 @@ from PIL import Image
 
 from artist import dna_parser as DP
 from artist.graphics import engine
+from artist.storage import art_storage
 from artist import stroke
 
 # TODO(kmd): Don't hard code. :)
@@ -29,8 +30,8 @@ def main() -> int:
       next_stroke.apply()
 
   # Save this image.
-  out_filename = f'/home/kmd/Projects/anybodys/artist/out/random{datetime.datetime.utcnow().isoformat()}'
-  graphics_engine.save_image(out_filename)
+  tmp_filepath = graphics_engine.save_image()
+  art_storage.ArtStorage(0).upload_blob(tmp_filepath)
   return 0
 
 
