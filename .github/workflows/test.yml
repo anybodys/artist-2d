@@ -10,15 +10,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DISPLAOY: :0.0
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Install OS packages
       run: sudo apt-get install python3-tk
-      
-    - name: Set DISPLAY for TK
-      run: export DISPLAY=localhost:0.0
 
     - name: Setup application
       run: make setup
