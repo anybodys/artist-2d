@@ -1,11 +1,15 @@
+setup:
+	pip install --user pipenv
+	pipenv install
+
 run:
-	python3 -m artist
+	pipenv run python3 -m artist
 
 test:
-	python3 -m unittest discover -s tests -p 'test_*.py'
+	pipenv run python3 -m unittest discover -s tests -p 'test_*.py'
 
 testcase:
-	python3 -m unittest ${TESTS}
+	pipenv run python3 -m unittest ${TESTS}
 
 clean:
 	find . -name '*~' -delete

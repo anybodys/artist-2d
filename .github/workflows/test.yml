@@ -10,9 +10,20 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99.0
 
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install OS packages
+      run: sudo apt-get install python3-tk
+    - run: sudo apt-get install xvfb
+    - run: export DISPLAY=':99.0'
+    - run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+    - name: Setup application
+      run: make setup
+
     - name: Run tests
-      run: make tests
+      run: make test
