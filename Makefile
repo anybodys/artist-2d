@@ -1,3 +1,7 @@
+setup:
+	pip install --user pipenv
+	pipenv install
+
 run:
 	python3 -m artist
 
