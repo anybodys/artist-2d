@@ -20,6 +20,9 @@ class EngineInterface(metaclass=abc.ABCMeta):
   def get_action(self, index):
     return self.action_class(index)
 
+  def get_action_count(self):
+    return len(self.action_class.__members__)
+
 
 class TurtleEngine(EngineInterface):
 

@@ -83,7 +83,7 @@ class GeneSequencer():
     gene = self.chromo.genes[self.index:end_i]
     self.index = end_i
 
-    action_index = 1 + (_dna_as_int(gene) % self.chromo.graphics_engine.action_class.count())
+    action_index = 1 + (_dna_as_int(gene) % self.chromo.graphics_engine.get_action_count())
     return self.chromo.graphics_engine.get_action(action_index)
 
 
