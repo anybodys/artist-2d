@@ -66,10 +66,6 @@ def _turtle_color_read(fun, field):
 
 
 class TurtleAction(Action):
-  @classmethod
-  def count(cls):
-    return len(cls.__members__)
-
   # Movements
   FORWARD = (ActionType.MOVE, turtle.forward, [_position])
   BACKWARD = (ActionType.MOVE, turtle.backward, [_position])
