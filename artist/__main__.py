@@ -27,7 +27,7 @@ def main() -> int:
       for g in DP.GeneSequencer(c):
         next_stroke.add_stroke_action(g)
 
-      next_stroke.apply()
+      next_stroke.apply(graphics_engine)
 
   # Save this image.
   tmp_filepath = graphics_engine.save_image()

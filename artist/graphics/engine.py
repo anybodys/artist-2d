@@ -17,6 +17,9 @@ class EngineInterface(metaclass=abc.ABCMeta):
   def save_image(self, output_filename: str):
     pass
 
+  def do_action(self, action, *action_args):
+    return action(*action_args)
+
   def get_action(self, index):
     return self.action_class(index)
 
@@ -37,6 +40,10 @@ class TurtleEngine(EngineInterface):
     self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
     os.makedirs(os.path.dirname(self.output_filepath), exist_ok=True)
     print(self.output_filepath)
+
+  def do_action(self, action, *action_args):
+    action_fun = getattr(self.turtle, action)
+    return super().do_action(action_fun, *action_args)
 
   def save_image(self):
     output_filepath = f'{self.output_filepath}.jpg'
