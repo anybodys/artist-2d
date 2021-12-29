@@ -28,11 +28,9 @@ class TurtleEngine(EngineInterface):
 
   def __init__(self):
     EngineInterface.__init__(self, actions.TurtleAction)
-    self.screen = turtle.getscreen()
-    self.screen.colormode(255)
-    self.turtle = turtle.Turtle()
-    self.turtle.speed(10)
-    self.turtle.hideturtle()
+    turtle.speed(10)
+    turtle.hideturtle()
+    turtle.getscreen().colormode(255)
 
     self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
     os.makedirs(os.path.dirname(self.output_filepath), exist_ok=True)
@@ -40,7 +38,7 @@ class TurtleEngine(EngineInterface):
 
   def save_image(self):
     output_filepath = f'{self.output_filepath}.jpg'
-    canvas = self.screen.getcanvas()
+    canvas = turtle.screen.getcanvas()
     canvas.postscript(file=f'{self.output_filepath}.eps')
     with Image.open(f'{self.output_filepath}.eps') as img:
       img.save(output_filepath)
