@@ -28,9 +28,7 @@ class TurtleEngine(EngineInterface):
 
   def __init__(self):
     EngineInterface.__init__(self, actions.TurtleAction)
-    turtle.speed(10)
-    turtle.hideturtle()
-    turtle.getscreen().colormode(255)
+    self.reset()
 
     # TODO(kmd): Use a tempfile that will be cleaned up.
     self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
@@ -43,3 +41,9 @@ class TurtleEngine(EngineInterface):
     with Image.open(f'{self.output_filepath}.eps') as img:
       img.save(output_filepath)
     return output_filepath
+
+  def reset(self):
+    turtle.clearscreen()
+    turtle.speed(10)
+    turtle.hideturtle()
+    turtle.getscreen().colormode(255)
