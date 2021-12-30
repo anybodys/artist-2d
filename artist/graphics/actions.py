@@ -60,9 +60,8 @@ def _angle(x):
 def _color(x):
   return int(x*255)
 
-def _turtle_color_read(fun, field):
+def _turtle_color_read(color, field):
   # Default value is 'black' as a string. Manually convert.
-  color = fun()
   if color == 'black':
     return 0
   # Otherwise, this should be an RGB tuple.
@@ -97,11 +96,11 @@ class TurtleAction(Action):
   XCOR = (ActionType.READ, turtle.xcor, [])
   YCOR = (ActionType.READ, turtle.ycor, [])
   ISDOWN = (ActionType.READ, turtle.isdown, [])
-  PENCOLOR_R_READ = (ActionType.READ, partial(_turtle_color_read, turtle.pencolor, 0), [])
-  PENCOLOR_G_READ = (ActionType.READ, partial(_turtle_color_read, turtle.pencolor, 1), [])
-  PENCOLOR_B_READ = (ActionType.READ, partial(_turtle_color_read, turtle.pencolor, 2), [])
-  FILLCOLOR_R_READ = (ActionType.READ, partial(_turtle_color_read, turtle.fillcolor, 0), [])
-  FILLCOLOR_G_READ = (ActionType.READ, partial(_turtle_color_read, turtle.fillcolor, 1), [])
-  FILLCOLOR_B_READ = (ActionType.READ, partial(_turtle_color_read, turtle.fillcolor, 2), [])
+  PENCOLOR_R_READ = (ActionType.READ, turtle.pencolor, [], lambda c: _turtle_color_read(c, 0))
+  PENCOLOR_G_READ = (ActionType.READ, turtle.pencolor, [], lambda c: _turtle_color_read(c, 1))
+  PENCOLOR_B_READ = (ActionType.READ, turtle.pencolor, [], lambda c: _turtle_color_read(c, 2))
+  FILLCOLOR_R_READ = (ActionType.READ, turtle.fillcolor, [], lambda c: _turtle_color_read(c, 0))
+  FILLCOLOR_G_READ = (ActionType.READ, turtle.fillcolor, [], lambda c: _turtle_color_read(c, 1))
+  FILLCOLOR_B_READ = (ActionType.READ, turtle.fillcolor, [], lambda c: _turtle_color_read(c, 2))
   FILLING = (ActionType.READ, turtle.filling, [])
 

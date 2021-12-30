@@ -31,14 +31,14 @@ class TestTurtleAction(unittest.TestCase):
     ret = ta.call([], [])
 
     # Default turtle returns color 'black'.
-    expected_ret = actions._turtle_color_read(lambda: 'black', 0)
+    expected_ret = actions._turtle_color_read('black', 0)
     self.assertEqual(expected_ret, ret)
 
   def test_turtle_color_read_rbg(self):
-    fake_color_read = lambda: (1, 2, 3)
-    ret = actions._turtle_color_read(fake_color_read, 0)
+    fake_color_ret = (1, 2, 3)
+    ret = actions._turtle_color_read(fake_color_ret, 0)
     self.assertEqual(1, ret)
-    ret = actions._turtle_color_read(fake_color_read, 1)
+    ret = actions._turtle_color_read(fake_color_ret, 1)
     self.assertEqual(2, ret)
-    ret = actions._turtle_color_read(fake_color_read, 2)
+    ret = actions._turtle_color_read(fake_color_ret, 2)
     self.assertEqual(3, ret)
