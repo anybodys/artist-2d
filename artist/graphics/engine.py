@@ -38,7 +38,7 @@ class TurtleEngine(EngineInterface):
 
   def save_image(self):
     output_filepath = f'{self.output_filepath}.jpg'
-    canvas = turtle.screen.getcanvas()
+    canvas = turtle.getscreen().getcanvas()
     canvas.postscript(file=f'{self.output_filepath}.eps')
     with Image.open(f'{self.output_filepath}.eps') as img:
       img.save(output_filepath)

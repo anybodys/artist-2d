@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pillow = "*"
 google-cloud-storage = "*"
+google-cloud-datastore = "*"
 
 [dev-packages]
 
