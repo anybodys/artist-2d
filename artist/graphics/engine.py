@@ -32,9 +32,9 @@ class TurtleEngine(EngineInterface):
     turtle.hideturtle()
     turtle.getscreen().colormode(255)
 
+    # TODO(kmd): Use a tempfile that will be cleaned up.
     self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
     os.makedirs(os.path.dirname(self.output_filepath), exist_ok=True)
-    print(self.output_filepath)
 
   def save_image(self):
     output_filepath = f'{self.output_filepath}.jpg'
