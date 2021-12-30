@@ -15,6 +15,7 @@ def main() -> int:
 
   current_gen = 0
   for artist_id, dna_str in DS.read_dna(current_gen):
+    graphics_engine.reset()
     p = painter.Painter(dna_str, graphics_engine)
     while p.still_growing():
       p.paint()
