@@ -11,22 +11,26 @@ class ActionType(Enum):
 
 class Action(Enum):
 
-  def __new__(cls, action_type, action_callable, arg_transforms):
+  def __new__(cls, action_type, action_callable, arg_transforms, output_transform=None):
     value = len(cls.__members__) + 1
     obj = object.__new__(cls)
     obj._value_ = value
     obj.action_type = action_type
     obj.action = action_callable
     obj.arg_transforms = arg_transforms
+    obj.output_transform = output_transform
     return obj
 
   def call(self, arg_generator, semantic_context):
-    print(f'calling {self} with {arg_generator}')
+    #print(f'calling {self} with {arg_generator}')
     args = []
     for arg_t in self.arg_transforms:
       next_arg = self._get_next_arg(arg_generator, semantic_context)
       args.append(arg_t(next_arg))
-    return self.action(*args)
+    ret = self.action(*args)
+    if self.output_transform:
+      ret = self.output_transform(ret)
+    return ret
 
   def _get_next_arg(self, arg_gen: Callable, semantic_context):
     ret = arg_gen()
