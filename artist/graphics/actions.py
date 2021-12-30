@@ -88,7 +88,9 @@ class TurtleAction(Action):
   PENDOWN = (ActionType.BRUSH, turtle.pendown, [])
   PENUP = (ActionType.BRUSH, turtle.penup, [])
   PENSIZE = (ActionType.BRUSH, turtle.pensize, [lambda x: int(x*50)])
+  COLOR = (ActionType.BRUSH, turtle.pencolor, [_color, _color, _color])
   PENCOLOR = (ActionType.BRUSH, turtle.pencolor, [_color, _color, _color])
+  FILLCOLOR = (ActionType.BRUSH, turtle.pencolor, [_color, _color, _color])
   BEGIN_FILL = (ActionType.BRUSH, turtle.begin_fill, [])
   END_FILL = (ActionType.BRUSH, turtle.end_fill, [])
 

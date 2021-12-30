@@ -13,6 +13,7 @@ class Painter:
     ]
 
   def still_growing(self):
+    # TODO(kmd): Make max age based on DNA.
     if self.age > 3:
       return False
     return True

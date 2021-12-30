@@ -20,11 +20,16 @@ class Client:
       yield artist_id, raw_dna.decode('utf-8')
 
   def write_new_dna(self, generation, artist_id, raw_dna):
+    if hasattr(raw_dna, 'encode'):
+      # If this is a string, convert to bytes.
+      raw_dna = raw_dna.encode()
+
     gen_key = self._get_dna_generation_key(generation)
     artists_dna = self.client.get(gen_key)
     if not artists_dna:
       print(f'Staring new generation {generation} in firestore')
       artists_dna = datastore.Entity(gen_key)
+
     encoded_dna = zlib.compress(raw_dna)
     artists_dna.update({str(artist_id): {'encoded_dna': encoded_dna}})
     self.client.put(artists_dna)
