@@ -4,34 +4,26 @@ import turtle
 
 from PIL import Image
 
-from artist import dna_parser as DP
+from artist import painter
+from artist import datastore
 from artist.graphics import engine
 from artist.storage import art_storage
-from artist import stroke
-
-# TODO(kmd): Don't hard code. :)
-dna_in = '/home/kmd/Projects/anybodys/artist/artist/data/dna/demo.txt'
 
 def main() -> int:
   graphics_engine = engine.TurtleEngine()
+  DS = datastore.Client()
 
-  dna_parser = DP.Parser(graphics_engine)
-  chromosomes = dna_parser.parse_file(dna_in)
+  current_gen = 0
+  for artist_id, dna_str in DS.read_dna(current_gen):
+    p = painter.Painter(dna_str, graphics_engine)
+    while p.still_growing():
+      p.paint()
+      p.age_up()
 
-  MAX_GROWTH = 4
-  # While: Still growing, make and apply new strokes.
-  for i in range(MAX_GROWTH):
-    print(f'****year {i}****')
-    for c in chromosomes:
-      next_stroke = stroke.Stroke(c.pre_junk_fun, c.post_junk_fun)
-      for g in DP.GeneSequencer(c):
-        next_stroke.add_stroke_action(g)
-
-      next_stroke.apply()
-
-  # Save this image.
-  tmp_filepath = graphics_engine.save_image()
-  art_storage.ArtStorage(0).upload_blob(tmp_filepath)
+    # Save this image.
+    tmp_filepath = graphics_engine.save_image()
+    art_storage.ArtStorage(0).upload_blob(tmp_filepath)
+    # TODO: rest the canvas for the next painter
   return 0
 
 

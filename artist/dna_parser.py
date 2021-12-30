@@ -4,22 +4,6 @@ START_SEQUENCE = 'AAA'
 END_SEQUENCE = 'TTT'
 
 
-class Parser:
-  def __init__(self, graphics_engine):
-    self.graphics_engine = graphics_engine
-    self.chromosomes = []
-
-  def parse_file(self, in_file):
-    with open(in_file) as fp:
-      chromosome_str = fp.readline()
-      while chromosome_str:
-        c = Chromosome(chromosome_str.strip(), self.graphics_engine)
-        if c.is_valid():
-          self.chromosomes.append(c)
-        chromosome_str = fp.readline()
-    return self.chromosomes
-
-
 class Chromosome():
   def __init__(self, as_str, graphics_engine):
     self.str_rep = as_str
