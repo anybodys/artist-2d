@@ -1,7 +1,6 @@
 import abc
-import datetime
-from enum import Enum
-import os
+import io
+import tempfile
 import turtle
 
 from PIL import Image
@@ -26,21 +25,17 @@ class EngineInterface(metaclass=abc.ABCMeta):
 
 class TurtleEngine(EngineInterface):
 
-  def __init__(self):
+  def __init__(self, art_storage):
     EngineInterface.__init__(self, actions.TurtleAction)
+    self.art_storage = art_storage
     self.reset()
 
-    # TODO(kmd): Use a tempfile that will be cleaned up.
-    self.output_filepath = os.path.join('/', 'tmp', 'artist-2d', f'{datetime.datetime.utcnow()}')
-    os.makedirs(os.path.dirname(self.output_filepath), exist_ok=True)
-
-  def save_image(self):
-    output_filepath = f'{self.output_filepath}.jpg'
+  def save_image(self, generation, artist_id):
     canvas = turtle.getscreen().getcanvas()
-    canvas.postscript(file=f'{self.output_filepath}.eps')
-    with Image.open(f'{self.output_filepath}.eps') as img:
-      img.save(output_filepath)
-    return output_filepath
+    ps = canvas.postscript()
+    with Image.open(io.BytesIO(ps.encode('utf-8'))) as img:
+      with self.art_storage.open(generation, artist_id) as blob_fp:
+        img.save(blob_fp, format='JPEG')
 
   def reset(self):
     turtle.clearscreen()
