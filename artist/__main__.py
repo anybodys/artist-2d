@@ -7,9 +7,10 @@ from PIL import Image
 from artist import painter
 from artist import datastore
 from artist.graphics import engine
+from artist.storage import art_storage
 
 def main() -> int:
-  graphics_engine = engine.TurtleEngine()
+  graphics_engine = engine.TurtleEngine(art_storage.ArtStorage())
   DS = datastore.Client()
 
   current_gen = 0

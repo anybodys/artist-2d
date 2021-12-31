@@ -6,7 +6,7 @@ from artist.graphics import actions
 from artist.graphics import engine
 
 
-engine = engine.TurtleEngine()
+engine = engine.TurtleEngine(None)
 
 class TestTurtleAction(unittest.TestCase):
 

@@ -6,7 +6,6 @@ import turtle
 from PIL import Image
 
 from artist.graphics import actions
-from artist.storage import art_storage
 
 
 class EngineInterface(metaclass=abc.ABCMeta):
@@ -26,9 +25,9 @@ class EngineInterface(metaclass=abc.ABCMeta):
 
 class TurtleEngine(EngineInterface):
 
-  def __init__(self):
+  def __init__(self, art_storage):
     EngineInterface.__init__(self, actions.TurtleAction)
-    self.art_storage = art_storage.ArtStorage()
+    self.art_storage = art_storage
     self.reset()
 
   def save_image(self, generation, artist_id):
