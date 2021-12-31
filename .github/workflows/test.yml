@@ -2,9 +2,6 @@ name: Test CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -19,7 +16,6 @@ jobs:
     - name: Install OS packages
       run: sudo apt-get install python3-tk
     - run: sudo apt-get install xvfb
-    - run: export DISPLAY=':99.0'
     - run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
     - name: Setup application
