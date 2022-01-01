@@ -3,9 +3,18 @@ import random
 START_SEQUENCE = 'AAA'
 END_SEQUENCE = 'TTT'
 
+INVERSE_MAP = {
+  ord('A'): ord('T'),
+  ord('T'): ord('A'),
+  ord('C'): ord('G'),
+  ord('G'): ord('C'),
+}
+
 
 class Chromosome():
-  def __init__(self, as_str, graphics_engine):
+  def __init__(self, as_str, graphics_engine, inverse=False):
+    if inverse:
+      as_str = as_str.translate(INVERSE_MAP)
     self.str_rep = as_str
     self.graphics_engine = graphics_engine
     self.pre_junk = ''
