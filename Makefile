@@ -2,6 +2,9 @@ setup:
 	pip install --user pipenv
 	pipenv install
 
+setup-virtual-display:
+	pipenv run Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
 run:
 	pipenv run python3 -m artist
 
