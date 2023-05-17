@@ -60,3 +60,8 @@ TODO: CI
 ## Deploy
 
 Nothing to deploy yet. :)
+
+
+## Learn More
+
+[Tech Spec](docs/tech_spec.md)
