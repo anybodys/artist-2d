@@ -5,8 +5,8 @@ setup:
 setup-virtual-display:
 	pipenv run Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
-run:
-	pipenv run python3 -m artist
+paint:
+	pipenv run python3 -m painter
 
 test:
 	pipenv run python3 -m unittest discover -s tests -p 'test_*.py'
@@ -15,7 +15,7 @@ testcase:
 	pipenv run python3 -m unittest ${TESTS}
 
 bootstrap:
-# Set python path so it can find our artist module.
+# Set python path so it can find our painter module.
 	PYTHONPATH="." pipenv run python3 scripts/bootstrap.py
 
 clean:
