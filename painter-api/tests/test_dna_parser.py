@@ -1,7 +1,7 @@
 import unittest
 
-from artist import dna_parser
-from artist.graphics import engine
+from painter import dna_parser
+from painter.graphics import engine
 
 
 class TestChromosome(unittest.TestCase):
