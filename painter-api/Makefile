@@ -5,7 +5,10 @@ setup:
 setup-virtual-display:
 	pipenv run Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
-paint:
+run-api:
+	pipenv run python3 -m painter.api
+
+run-script:
 	pipenv run python3 -m painter
 
 test:
@@ -13,6 +16,10 @@ test:
 
 testcase:
 	pipenv run python3 -m unittest ${TESTS}
+
+deploy:
+	gcloud run deploy --source . painter-api
+
 
 bootstrap:
 # Set python path so it can find our painter module.
