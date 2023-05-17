@@ -44,7 +44,7 @@ This is a WIP.
 ## Run
 
 ```
-make run
+make paint
 ```
 
 This generate and an image to a path I find convenient because I haven't made it a variable yet.

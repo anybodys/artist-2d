@@ -1,9 +1,9 @@
 import turtle
 import unittest
 
-from artist import dna_parser
-from artist.graphics import actions
-from artist.graphics import engine
+from painter import dna_parser
+from painter.graphics import actions
+from painter.graphics import engine
 
 
 engine = engine.TurtleEngine(None)

@@ -4,10 +4,10 @@ import turtle
 
 from PIL import Image
 
-from artist import painter
-from artist import datastore
-from artist.graphics import engine
-from artist.storage import art_storage
+from painter import painter
+from painter import datastore
+from painter.graphics import engine
+from painter.storage import art_storage
 
 def main() -> int:
   graphics_engine = engine.TurtleEngine(art_storage.ArtStorage())

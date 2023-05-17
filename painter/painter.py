@@ -1,5 +1,5 @@
-from artist import dna_parser
-from artist import stroke
+from painter import dna_parser
+from painter import stroke
 
 class Painter:
 

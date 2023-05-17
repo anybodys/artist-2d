@@ -1,4 +1,4 @@
-from artist.graphics import actions
+from painter.graphics import actions
 
 class Stroke:
 
