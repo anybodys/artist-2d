@@ -16,7 +16,6 @@ def health_check():
   return 'OK'
 
 
-
 @app.route("/paint")
 def paint():
   gen = request.args.get('gen', -1)

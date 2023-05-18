@@ -5,25 +5,36 @@ on:
     paths:
       'painter-api/**'
 
+defaults:
+  run:
+    working-directory: painter-api
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
     env:
       DISPLAY: :99.0
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install OS packages
-      run: sudo apt-get install software-properties-common
-      run: sudo add-apt-repository ppa:deadsnakes/ppa
-      run: sudo apt-get update
-      run: sudo apt-get install python3.8 python3-tk
-      run: sudo apt-get install xvfb
-      run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      # Setup Python (faster than using Python container)
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
 
-    - name: Setup and run Tests
-      run: cd  painter-api
-      run: make setup
-      run: make test
+
+      - run: sudo apt-get install xvfb
+      - run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Install pipenv
+        run: python -m pip install --upgrade pipenv
+
+      - name: Install dependencies
+        run: pipenv install
+
+      - name: Run Tests
+        run: make test
