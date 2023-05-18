@@ -1,7 +1,9 @@
-name: Test CI
+name: ci-painter-api
 
 on:
   push:
+    paths:
+      'painter-api/**'
 
 jobs:
   build:
@@ -21,8 +23,7 @@ jobs:
       run: sudo apt-get install xvfb
       run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
-    - name: Setup application
+    - name: Setup and run Tests
+      run: cd  painter-api
       run: make setup
-
-    - name: Run tests
       run: make test
