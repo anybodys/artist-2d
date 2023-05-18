@@ -1,8 +1,4 @@
-import datetime
 import sys
-import turtle
-
-from PIL import Image
 
 from painter import painter
 from painter import datastore
