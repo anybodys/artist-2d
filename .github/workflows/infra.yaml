@@ -1,0 +1,36 @@
+name: Terraform CD
+
+on:
+  push:
+
+env:
+  DEPLOY_ENV: ${{
+    (startsWith(github.head_ref, 'releases/prod') && 'prod') ||
+    (startsWith(github.head_ref, 'main') && 'dev') ||
+    null }}
+  GOOGLE_CREDENTIALS: ${{ secrets.GCP_CD }}
+
+jobs:
+  tf_bootstrap:
+    name: "Terraform Bootstrap"
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: infra/bootstrap
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4
+
+      - run: terraform init
+      - run: terraform fmt -check
+      - run: terraform validate
+      - run: terraform plan -no-color
+
+      - run: echo "${{ env.DEPLOY_ENV }}"
+      - run: terraform apply -no-color -auto-approve
+        if: ${{ env.DEPLOY_ENV }}
