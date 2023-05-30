@@ -6,7 +6,7 @@ provider "google" {
 
 # Create the Cloud Run service
 resource "google_cloud_run_service" "voting_service" {
-  name = "voting"
+  name     = "voting"
   location = var.region
 
   template {
