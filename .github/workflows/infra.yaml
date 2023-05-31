@@ -4,10 +4,6 @@ on:
   push:
 
 env:
-  DEPLOY_ENV: ${{
-    (startsWith(github.head_ref, 'releases/prod') && 'prod') ||
-    (startsWith(github.head_ref, 'main') && 'dev') ||
-    null }}
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_CD }}
   PROJECT: "artist-2d"
 
@@ -36,9 +32,8 @@ jobs:
       - run: terraform validate
       - run: terraform plan -no-color
 
-      - run: echo "${{ env.DEPLOY_ENV }}"
       - run: terraform apply -no-color -auto-approve
-        if: ${{ env.DEPLOY_ENV }}
+        if: github.ref_name == 'main'
 
   tf_app:
     name: "Terraform App"
@@ -64,6 +59,5 @@ jobs:
       - run: terraform validate
       - run: terraform plan -no-color
 
-      - run: echo "${{ env.DEPLOY_ENV }}"
       - run: terraform apply -no-color -auto-approve
-        if: ${{ env.DEPLOY_ENV }}
+        if: github.ref_name == 'main'
