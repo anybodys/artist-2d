@@ -3,12 +3,12 @@ name: ci-voting-api
 on:
   push:
     paths:
-      - 'voting-api/**'
+      - 'voting_api/**'
       - '.github/workflows/ci.voting-api.yaml'
 
 defaults:
   run:
-    working-directory: voting-api
+    working-directory: voting_api
 
 jobs:
   build:

@@ -16,7 +16,7 @@ testcase:
 	PIPENV_DOTENV_LOCATION=.env.test pipenv run pytest ${TESTS}
 
 deploy:
-	gcloud run deploy --source . voting-api
+	gcloud run deploy --source . voting_api
 
 clean:
 	find . -name '*~' -delete
