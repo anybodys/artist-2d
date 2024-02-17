@@ -11,6 +11,7 @@ variable "region" {
 variable "app_versions" {
   type = map(string)
   default = {
+    client : "0.1.0",
     voting_api : "0.1.1",
     painter_api : "0.1.0",
   }
