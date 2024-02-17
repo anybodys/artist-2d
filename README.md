@@ -11,7 +11,7 @@ This code:
 
 Some concepts I wanted to include to see how they played out, or because they seemed logical and fun to me:
 * Layers of abstraction
-   * Just like we don't have chromosome that says "green eyes", these artists don't hae chromosomes that say "circle".
+   * Just like we don't have chromosome that says "green eyes", these artists don't have chromosomes that say "circle".
    * I chose to use ATCG as my initial input even though I could have used any sort of abstraction.
  * Semantic meaning
    * Every cell in our body has the same DNA. So why is a skin cell so different than a brain cell? Semantic meaning! I think.
