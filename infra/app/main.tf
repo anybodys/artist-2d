@@ -41,4 +41,5 @@ resource "google_cloud_run_service" "voting" {
     latest_revision = true
   }
 
+  autogenerate_revision_name = true
 }
