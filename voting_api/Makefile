@@ -1,7 +1,7 @@
 .PHONY: setup run run-api test testcase deploy clean
 
 setup:
-	pip install --user pipenv
+	pip install --upgrade --user pipenv
 	pipenv install --dev
 
 run: run-api

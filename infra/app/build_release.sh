@@ -13,7 +13,7 @@ build_image () {
     app=$1
     image=$(terraform output -raw ${app}_image)
     echo "...checking if we need to build ${image}"
-    docker inspect ${image} > /dev/null
+    docker pull ${image} > /dev/null 2>&1
     image_exists=$?
     if [ $image_exists -ne 0 ]; then
         echo "...image not found. We will build and push."
