@@ -1,7 +1,7 @@
 .PHONY: setup run run-api test testcase deploy clean
 
 setup:
-	pip install --user pipenv
+	pip install --upgrade --user pipenv
 	pipenv install --dev
 
 run: run-api
@@ -16,7 +16,7 @@ testcase:
 	PIPENV_DOTENV_LOCATION=.env.test pipenv run pytest ${TESTS}
 
 deploy:
-	gcloud run deploy --source . voting-api
+	gcloud run deploy --source . voting_api
 
 clean:
 	find . -name '*~' -delete

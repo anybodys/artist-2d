@@ -6,9 +6,10 @@ name = "pypi"
 [packages]
 flask = "*"
 google-cloud-storage = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.10"

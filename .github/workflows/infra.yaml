@@ -2,62 +2,55 @@ name: Terraform CD
 
 on:
   push:
+    paths:
+      - infra/**
+      - .github/workflows/infra.yaml
 
 env:
-  GOOGLE_CREDENTIALS: ${{ secrets.GCP_CD }}
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
   PROJECT: "artist-2d"
+  DEPLOY_ENV: "dev"
+
+
+defaults:
+  run:
+    working-directory: infra/app
 
 jobs:
-  tf_bootstrap:
-    name: "Terraform Bootstrap"
-    runs-on: "ubuntu-latest"
-    defaults:
-      run:
-        working-directory: infra/bootstrap
-
-    env:
-      STAGE: "bootstrap"
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v1
-
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.4
-
-      - run: ../setbucket.sh
-      - run: terraform init
-      - run: terraform fmt -check
-      - run: terraform validate
-      - run: terraform plan -no-color
-
-      - run: terraform apply -no-color -auto-approve
-        if: github.ref_name == 'main'
-
   tf_app:
     name: "Terraform App"
     runs-on: "ubuntu-latest"
-    defaults:
-      run:
-        working-directory: infra/app
-
-    env:
-      STAGE: "app"
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v1
 
-      - uses: hashicorp/setup-terraform@v2
+      - uses: 'actions/checkout@v3'
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CD }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.4
+          terraform_wrapper: false
 
-      - run: cd .. && ./setbucket.sh
-      - run: terraform init
-      - run: terraform fmt -check
-      - run: terraform validate
-      - run: terraform plan -no-color
+      - name: 'Init Terraform'
+        run: |
+          terraform init
+          terraform refresh
 
-      - run: terraform apply -no-color -auto-approve
-        if: github.ref_name == 'main'
+      - name: 'Build Release'
+        run: bash ./build_release.sh
+
+      - name: 'Update Infra'
+        run: |
+          terraform plan -no-color
+          terraform apply -no-color -auto-approve

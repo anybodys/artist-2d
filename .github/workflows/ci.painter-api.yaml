@@ -3,11 +3,11 @@ name: ci-painter-api
 on:
   push:
     paths:
-      'painter-api/**'
+      'painter_api/**'
 
 defaults:
   run:
-    working-directory: painter-api
+    working-directory: painter_api
 
 jobs:
   build:

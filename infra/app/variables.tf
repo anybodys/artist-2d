@@ -1,4 +1,4 @@
-variable "project_name" {
+variable "project" {
   type    = string
   default = "artist-2d"
 }
@@ -11,7 +11,8 @@ variable "region" {
 variable "app_versions" {
   type = map(string)
   default = {
-    voting : "v0.1.0",
-    painter : "v0.1.0",
+    voting_api : "0.1.1",
+    painter_api : "0.1.0",
   }
+
 }
