@@ -1,7 +1,6 @@
 .PHONY : \
 	infra-lint \
-	infra-format \
-	infra-test
+	infra-format
 
 infra-lint:
 	terraform fmt -recursive -check .
@@ -9,5 +8,3 @@ infra-lint:
 infra-format:
 	terraform fmt -recursive .
 
-infra-test:
-	cd infra/test && go test -v -timeout 30m

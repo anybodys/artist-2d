@@ -46,13 +46,18 @@ class Painting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            publicUrl: props.props.publicLink
+            publicUrl: props.props.publicLink,
+            artistId: props.props.artistId
         };
     }
 
     render() {
         return (
-                <img className="Painting"src={this.state.publicUrl} />
+                <img
+            className="Painting"
+            src={this.state.publicUrl}
+            alt={"Computer generated abstract art by " + this.state.artistId}
+                />
         );
     }
 }

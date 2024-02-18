@@ -24,3 +24,4 @@ build_image () {
 
 build_image voting_api
 build_image painter_api
+build_image client
