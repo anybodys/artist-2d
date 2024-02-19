@@ -1,4 +1,4 @@
-name: CI Infra Checks
+name: CI Infra
 
 on:
   push:

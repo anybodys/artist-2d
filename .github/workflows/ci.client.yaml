@@ -1,10 +1,10 @@
-name: Client CI/CD
+name: CI Client
 
 on:
   push:
     paths:
       - client/**
-      - .github/workflows/client.yaml
+      - .github/workflows/ci.client.yaml
 
 defaults:
   run:

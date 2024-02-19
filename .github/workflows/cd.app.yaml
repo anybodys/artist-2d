@@ -1,4 +1,4 @@
-name: ci-voting-api
+name: CD Apps
 
 on:
   release:

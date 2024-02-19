@@ -1,10 +1,10 @@
-name: ci-voting-api
+name: CI Voting API
 
 on:
   push:
     paths:
-      - 'voting_api/**'
-      - '.github/workflows/ci.voting-api.yaml'
+      - voting_api/**
+      - .github/workflows/ci.voting_api.yaml
 
 defaults:
   run:
