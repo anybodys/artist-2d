@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: voting_api
+  name: voting-api
 spec:
   template:
     metadata:
