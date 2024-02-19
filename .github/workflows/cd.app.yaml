@@ -38,8 +38,8 @@ jobs:
         # Split "APP:VERSION" into two envvars.
         run: |
           echo $GITHUB_REF_NAME
-          echo "APP=$(echo "${{ env.GITHUB_REF_NAME }}" | cut -d '-' -f 1)" >> $GITHUB_ENV
-          echo "VERSION=$(echo "${{ env.GITHUB_REF_NAME }}" | cut -d '-' -f 2)" >> $GITHUB_ENV
+          echo "APP=$(echo $GITHUB_REF_NAME | cut -d '-' -f 1)" >> $GITHUB_ENV
+          echo "VERSION=$(echo $GITHUB_REF_NAME | cut -d '-' -f 2)" >> $GITHUB_ENV
 
       - name: Get Image name
         run: |
