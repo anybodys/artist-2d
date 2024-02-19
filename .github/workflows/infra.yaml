@@ -23,17 +23,15 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - uses: 'actions/checkout@v3'
-
-      - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_CD }}'
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
         with:
           version: '>= 363.0.0'
 
@@ -42,15 +40,12 @@ jobs:
           terraform_version: 1.4
           terraform_wrapper: false
 
-      - name: 'Init Terraform'
+      - name: Init Terraform
         run: |
           terraform init
           terraform refresh
 
-      - name: 'Build Release'
-        run: bash ./build_release.sh
-
-      - name: 'Update Infra'
+      - name: Update Infra
         run: |
           terraform plan -no-color
           terraform apply -no-color -auto-approve
