@@ -1,0 +1,57 @@
+name: ci-voting-api
+
+on:
+  release:
+    types: [published]
+
+
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
+  PROJECT: "artist-2d"
+  DEPLOY_ENV: "dev"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_CD }}'
+
+      - name: Set Up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 363.0.0'
+
+      - name: Set Release Envvars
+        # Split "APP:VERSION" into two envvars.
+        run: |
+          echo APP=$(echo $GITHUB_REF_NAME | cut -d ':' -f 1)" >> $GITHUB_ENV
+          echo VERSION=$(echo $GITHUB_REF_NAME | cut -d ':' -f 2)" >> $GITHUB_ENV
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.4
+          terraform_wrapper: false
+
+      - name: Get Image from Terraform Config Output
+        run: |
+          terraform init
+          terraform refresh
+          echo IMAGE=$(terraform output -raw ${APP}_image) >> $GITHUB_ENV
+
+      - name: Build Release Image
+        run: |
+          docker build ../../${APP}/ -t ${IMAGE}
+          docker push ${IMAGE}
+
+      - name: Release It!
+        run: |
+          cd ${APP}
+          gcloud run services replace service.yaml
