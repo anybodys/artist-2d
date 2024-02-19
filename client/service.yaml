@@ -1,17 +1,13 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: CLIENT
+  name: client
 spec:
   template:
+    metadata:
+      name: ${REVISION_NAME}
     spec:
       containers:
       - image: ${IMAGE}
         ports:
           containerPort: 3000
-        startupProbe:
-            port: 3000
-          initialDelaySeconds: 10
-          failureThreshold: 3
-    metadata:
-      name: client-${VERSION}
