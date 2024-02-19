@@ -9,10 +9,11 @@ env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
   PROJECT: "artist-2d"
   DEPLOY_ENV: "dev"
+  REGION: "us-west1"
 
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,29 +30,33 @@ jobs:
         with:
           version: '>= 363.0.0'
 
+      - name: Docker auth for GCP Artifact Registry
+        run: |-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
       - name: Set Release Envvars
         # Split "APP:VERSION" into two envvars.
         run: |
-          echo APP=$(echo $GITHUB_REF_NAME | cut -d ':' -f 1)" >> $GITHUB_ENV
-          echo VERSION=$(echo $GITHUB_REF_NAME | cut -d ':' -f 2)" >> $GITHUB_ENV
+          echo $GITHUB_REF_NAME
+          echo "APP=$(echo "${{ env.GITHUB_REF_NAME }}" | cut -d '-' -f 1)" >> $GITHUB_ENV
+          echo "VERSION=$(echo "${{ env.GITHUB_REF_NAME }}" | cut -d '-' -f 2)" >> $GITHUB_ENV
 
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.4
-          terraform_wrapper: false
-
-      - name: Get Image from Terraform Config Output
+      - name: Get Image name
         run: |
-          terraform init
-          terraform refresh
-          echo IMAGE=$(terraform output -raw ${APP}_image) >> $GITHUB_ENV
+          echo "IMAGE=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT }}/${{ env.PROJECT }}/${{ env.APP }}:${{ env.VERSION }}" >> $GITHUB_ENV
 
       - name: Build Release Image
         run: |
-          docker build ../../${APP}/ -t ${IMAGE}
-          docker push ${IMAGE}
+          echo "Building image ${{ env.IMAGE }}"
+          docker build ${{ env.APP }}/ -t ${{ env.IMAGE }}
+          docker push ${{ env.IMAGE }}
 
       - name: Release It!
         run: |
-          cd ${APP}
-          gcloud run services replace service.yaml
+          cd ${{ env.APP }}
+          export REVISION_NAME=$( echo "${{ env.APP}}-${{ env.VERSION }}" | sed s/\\./-/g )
+          echo "Depoying Service file..."
+          envsubst < service.yaml
+          # Yaml doesn't support variable sub, so use envsubst and read file from stdin.
+          envsubst < service.yaml | \
+          gcloud run services replace - --region ${{ env.REGION }}
