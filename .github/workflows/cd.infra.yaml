@@ -1,10 +1,10 @@
-name: Terraform CD
+name: CD Infra
 
 on:
   push:
     paths:
       - infra/**
-      - .github/workflows/infra.yaml
+      - .github/workflows/ci.infra.yaml
 
 env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
