@@ -54,7 +54,7 @@ jobs:
       - name: Release It!
         run: |
           cd ${{ env.APP }}
-          export REVISION_NAME=$( echo "${{ env.APP}}-${{ env.VERSION }}" | sed s/\\./-/g )
+          export REVISION_NAME=$( echo "${{ env.APP}}-${{ env.VERSION }}" | sed s/[^a-zA-Z0-9]/-/g )
           echo "Depoying Service file..."
           envsubst < service.yaml
           # Yaml doesn't support variable sub, so use envsubst and read file from stdin.
