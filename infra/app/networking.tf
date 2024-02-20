@@ -35,21 +35,20 @@ resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = data.google_cloud_run_v2_service.client.name
+    service = data.google_cloud_run_service.client.name
   }
 }
 
-
-data "google_cloud_run_v2_service" "client" {
+data "google_cloud_run_service" "client" {
   name     = "client"
   location = var.region
   project  = var.project
 }
 
 resource "google_cloud_run_service_iam_member" "public-access" {
-  location = data.google_cloud_run_v2_service.client.location
-  project  = data.google_cloud_run_v2_service.client.project
-  service  = data.google_cloud_run_v2_service.client.name
+  location = data.google_cloud_run_service.client.location
+  project  = data.google_cloud_run_service.client.project
+  service  = data.google_cloud_run_service.client.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
