@@ -5,6 +5,10 @@ terraform {
       version = "3.0.2"
     }
   }
+  backend "gcs" {
+    bucket = "artist-2d-bucket-tfstate-dev"
+    prefix = "terraform/state"
+  }
 }
 
 
