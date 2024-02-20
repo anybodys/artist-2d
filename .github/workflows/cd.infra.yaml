@@ -5,6 +5,8 @@ on:
     paths:
       - infra/**
       - .github/workflows/ci.infra.yaml
+    branches:
+      - main
 
 env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
