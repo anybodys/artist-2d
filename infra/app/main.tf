@@ -13,6 +13,10 @@ provider "google" {
   region  = var.region
 }
 
+provider "google-beta" {
+  project = var.project
+}
+
 data "google_client_config" "current" {
 }
 
@@ -24,4 +28,3 @@ locals {
   voting_tag    = var.app_versions["voting_api"]
   voting_image  = "${local.image_base}voting_api:${local.voting_tag}"
 }
-
