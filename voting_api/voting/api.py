@@ -1,24 +1,25 @@
 import os
 
-from flask import Flask, jsonify, request
+from apiflask import APIFlask
+from flask import jsonify, request
 
 from voting.storage import art_storage
 
 
 def create_app():
-  app = Flask(__name__)
+  app = APIFlask(__name__)
   return app
 
 
 app = create_app()
 
 
-@app.route("/health")
+@app.get("/health")
 def health_check():
   return 'OK'
 
 
-@app.route("/art")
+@app.get("/art")
 def art():
   gen = request.args.get('gen', -1)
 
