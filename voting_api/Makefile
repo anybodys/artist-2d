@@ -4,10 +4,13 @@ setup:
 	pip install --upgrade --user pipenv
 	pipenv install --dev
 
+generate-openapi:
+	pipenv run flask --app voting.api spec 
+
 run: run-api
 
 run-api:
-	pipenv run flask --app voting.api run
+	pipenv run flask --app voting.api --debug run
 
 test:
 	PIPENV_DOTENV_LOCATION=.env.test pipenv run pytest

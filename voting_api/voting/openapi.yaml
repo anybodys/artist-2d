@@ -1,0 +1,32 @@
+info:
+  title: Artist 2D Voting API
+  version: 0.1.0
+tags: []
+servers:
+- url: http://127.0.0.1:5000/
+paths:
+  /art:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      summary: Art
+  /health:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      summary: Health Check
+swagger: '2.0'
+host: gateway-c24bw3cnyq-wl.a.run.app
+x-google-backend:
+  address: voting-api
+  protocol: h2
