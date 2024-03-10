@@ -45,19 +45,21 @@ data "google_cloud_run_service" "client" {
   project  = var.project
 }
 
+resource "google_cloud_run_domain_mapping" "client" {
+  name     = var.domain
+  location = data.google_cloud_run_service.client.location
+  metadata {
+    namespace = data.google_cloud_run_service.client.project
+  }
+  spec {
+    route_name = data.google_cloud_run_service.client.name
+  }
+}
+
 resource "google_cloud_run_service_iam_member" "public-access" {
   location = data.google_cloud_run_service.client.location
   project  = data.google_cloud_run_service.client.project
   service  = data.google_cloud_run_service.client.name
   role     = "roles/run.invoker"
   member   = "allUsers"
-}
-
-resource "google_compute_managed_ssl_certificate" "lb_default" {
-  provider = google-beta
-  name     = "artist-ssl-cert"
-
-  managed {
-    domains = [var.domain]
-  }
 }
