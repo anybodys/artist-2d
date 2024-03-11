@@ -28,7 +28,7 @@ locals {
   image_base    = "${var.region}-docker.pkg.dev/${var.project}/${var.project}/"
   client_tag    = var.app_versions["client"]
   client_image  = "${local.image_base}client:${local.client_tag}"
-  painter_image = "${local.image_base}painter_api:${var.app_versions["painter_api"]}"
-  voting_tag    = var.app_versions["voting_api"]
-  voting_image  = "${local.image_base}voting_api:${local.voting_tag}"
+  painter_image = "${local.image_base}painterapi:${var.app_versions["painterapi"]}"
+  voting_tag    = var.app_versions["votingapi"]
+  voting_image  = "${local.image_base}votingapi:${local.voting_tag}"
 }
