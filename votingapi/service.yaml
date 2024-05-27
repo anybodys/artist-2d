@@ -9,3 +9,6 @@ spec:
     spec:
       containers:
       - image: ${IMAGE}
+        env:
+        - name: GOOGLE_CLOUD_PROJECT
+          value: artist-2d
