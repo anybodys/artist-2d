@@ -5,7 +5,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: ${IMAGE}
+      name: votingapi
     spec:
       containers:
       - image: ${IMAGE}
