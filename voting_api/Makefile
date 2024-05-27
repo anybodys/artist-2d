@@ -3,9 +3,7 @@
 setup:
 	pip install --upgrade --user pipenv
 	pipenv install --dev
-
-generate-openapi:
-	pipenv run flask --app voting.api spec 
+	npm install -g api-spec-converter
 
 run: run-api
 
@@ -19,7 +17,7 @@ testcase:
 	PIPENV_DOTENV_LOCATION=.env.test pipenv run pytest ${TESTS}
 
 deploy:
-	gcloud run deploy --source . voting_api
+	gcloud run deploy --source . votingapi
 
 clean:
 	find . -name '*~' -delete

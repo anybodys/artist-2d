@@ -1,11 +1,11 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: voting-api
+  name: votingapi
 spec:
   template:
     metadata:
-      name: ${REVISION_NAME}
+      name: ${IMAGE}
     spec:
       containers:
       - image: ${IMAGE}

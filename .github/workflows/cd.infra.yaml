@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - infra/**
-      - .github/workflows/ci.infra.yaml
+      - .github/workflows/cd.infra.yaml
     branches:
       - main
 
