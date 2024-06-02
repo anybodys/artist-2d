@@ -1,65 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import './App.css';
+import {VotingApi} from './api'
 
 function App() {
-  return (
-    <div className="App">
-      <Museum/>
-    </div>
-  );
-}
+  const [paintingsData, setData] = useState([]);
 
+  useEffect(() => {
+    VotingApi
+      .get()
+      .then(data => setData(data['art']))
+  }, []);
 
-class Museum extends React.Component {
-    render() {
-        // TODO(kmd): This should come from the API. :)
-        const paintingsData = [{
-            publicLink: 'https://storage.googleapis.com/artist-2d.appspot.com/gen-0/0427b526-d632-41a1-b995-1b07a24befba.jpg',
-            generation: 0,
-            artistId: 'example-artist-id-1'
-        },{
-            publicLink: 'https://storage.googleapis.com/artist-2d.appspot.com/gen-0/0427b526-d632-41a1-b995-1b07a24befba.jpg',
-            generation: 0,
-            artistId: 'example-artist-id-2'
-        }];
-
-        const paintings = paintingsData.map(pd =>
-            this.renderPainting(pd)
-        );
-
-        return (<div>{paintings}</div>);
-    }
-
-
-    renderPainting(pd) {
-        return (
-                <Painting
-            key={pd.artistId}
-            props={pd}
-                />
-        );
-    }
+  return (<div className="App">
+    <div>{ paintingsData ? paintingsData.map(
+      pd =>
+        <Painting key={pd.artist_id} props={pd} />)  :  'Loading...'}</div>
+    </div>);
 }
 
 
 class Painting extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            publicUrl: props.props.publicLink,
-            artistId: props.props.artistId
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      publicUrl: props.props.public_link,
+      artistId: props.props.artist_id
+    };
+  }
 
-    render() {
-        return (
-                <img
-            className="Painting"
-            src={this.state.publicUrl}
-            alt={"Computer generated abstract art by " + this.state.artistId}
-                />
-        );
-    }
+  render() {
+    return (
+      <img
+      className="Painting"
+      src={this.state.publicUrl}
+      alt={"Computer generated abstract art by " + this.state.artistId}
+      />
+    );
+  }
 }
 
 export default App;
