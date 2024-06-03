@@ -10,4 +10,4 @@ generation.
 
 ## Server Architecture
 
-![System Diagram](artist2d.svg "System Diagram")
+![System Diagram](Artist2d.svg "System Diagram")
