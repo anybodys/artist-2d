@@ -8,10 +8,19 @@ setup:
 run: run-api
 
 run-api:
-	pipenv run python manage.py runserver
+	pipenv run docker-compose up -d --build
+
+db-migrate:
+	pipenv run docker-compose exec api python manage.py migrate --noinput
+
+db-makemigrations:
+	pipenv run docker-compose exec api python manage.py makemigrations --noinput
+
+db-shell:
+	pipenv run docker-compose exec db psql artist local-user
 
 test:
-	PIPENV_DOTENV_LOCATION=.env.test pipenv run python manage.py test
+	pipenv run docker-compose -f docker-compose-test.yml up --build --abort-on-container-exit
 
 deploy:
 	gcloud run deploy --source . storageapi
