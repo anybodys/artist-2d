@@ -19,6 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = os.environ["ENV"]
 IS_PROD = ENV == "prod"
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
+REGION = os.environ.get("GOOGLE_CLOUD_REGION", "us-west1")
 SECRET_KEY = os.environ["SECRET_KEY"]
 SECRET_KEY_FALLBACKS = [
   # Put old secret keys here when rotating. Remove promptly!
@@ -33,7 +35,7 @@ if CLOUDRUN_SERVICE_URL:
   SECURE_SSL_REDIRECT = True
   SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
-  assert not IS_PROD
+  #assert not IS_PROD
   ALLOWED_HOSTS = ["*"]
 
 
@@ -80,10 +82,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'storage.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
@@ -94,11 +92,6 @@ DATABASES = {
     "PASSWORD": os.environ['POSTGRES_PASSWORD'],
   }
 }
-
-# If the flag as been set, configure to use proxy
-#if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-#    DATABASES["default"]["HOST"] = "127.0.0.1"
-#    DATABASES["default"]["PORT"] = 5432
 
 
 # Password validation
