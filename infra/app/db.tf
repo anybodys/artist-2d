@@ -62,20 +62,25 @@ resource "google_secret_manager_secret_version" "storageapi-current" {
   secret_data = random_password.storageapi_db.result
 }
 
-resource "postgresql_grant" "storageapi" {
-  database    = google_sql_database.database.name
-  role        = google_sql_user.storageapi.name
-  schema      = "public"
-  object_type = "database"
-  privileges  = ["CONNECT", "CREATE", "TEMPORARY"]
-}
+################################################################
+## One-time code, run from local after allow-listing local IP.
+## Creates a user for the Storage API to connect with.
+################################################################
 
-provider "postgresql" {
-  host            = google_sql_database_instance.artist2d.ip_address.0.ip_address
-  port            = 5432
-  database        = google_sql_database.database.name
-  username        = google_sql_user.root.name
-  password        = random_password.artist2d_db.result
-  sslmode         = "require"
-  connect_timeout = 15
-}
+#resource "postgresql_grant" "storageapi" {
+#  database    = google_sql_database.database.name
+#  role        = google_sql_user.storageapi.name
+#  schema      = "public"
+#  object_type = "database"
+#  privileges  = ["CONNECT", "CREATE", "TEMPORARY"]
+#}
+
+#provider "postgresql" {
+#  host            = google_sql_database_instance.artist2d.ip_address.0.ip_address
+#  port            = 5432
+#  database        = google_sql_database.database.name
+#  username        = google_sql_user.root.name
+#  password        = random_password.artist2d_db.result
+#  sslmode         = "require"
+#  connect_timeout = 15
+#}
