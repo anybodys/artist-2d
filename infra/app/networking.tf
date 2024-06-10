@@ -69,7 +69,7 @@ resource "google_dns_record_set" "api-a" {
   rrdatas      = [module.lb-http.external_ip]
 }
 
-data "google_compute_address" "external_ip" {
+data "google_compute_global_address" "external_ip" {
   name = "artist-address"
 }
 
@@ -80,7 +80,7 @@ module "lb-http" {
   name    = "artist"
   project = var.project
 
-  address                         = data.google_compute_address.external_ip.address
+  address                         = data.google_compute_global_address.external_ip.address
   ssl                             = var.ssl
   managed_ssl_certificate_domains = [var.domain, "${local.api_domain}"]
   https_redirect                  = var.ssl

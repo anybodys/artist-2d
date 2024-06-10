@@ -4,6 +4,7 @@ variable "app_versions" {
     client : "0.1.0",
     votingapi : "0.1.1",
     painterapi : "0.1.0",
+    storageapi : "0.0.0kmddbtest",
   }
 
 }
