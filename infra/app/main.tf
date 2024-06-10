@@ -4,10 +4,10 @@ terraform {
       source  = "hashicorp/google"
       version = "5.32.0"
     }
-    postgresql = {
-      source  = "cyrilgdn/postgresql"
-      version = "1.22.0"
-    }
+    #postgresql = {
+    #  source  = "cyrilgdn/postgresql"
+    #  version = "1.22.0"
+    #}
   }
   backend "gcs" {
     bucket = "artist-2d-bucket-tfstate-dev"
@@ -62,6 +62,18 @@ resource "google_cloud_run_v2_service" "storageapi" {
       image = "${local.image_base}storageapi:${local.storageapi_tag}"
       # TODO: gunicorn
       command = ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+      startup_probe {
+        tcp_socket {
+          port = 8000
+        }
+      }
+      liveness_probe {
+        http_get {
+          path = "/api/health"
+        }
+      }
+
       env {
         name  = "ENV"
         value = "prod"
