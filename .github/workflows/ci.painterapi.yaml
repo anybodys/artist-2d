@@ -3,12 +3,12 @@ name: CI Painter API
 on:
   push:
     paths:
-      - painter_api/**
-      - .github/workflows/ci.painter_api.yaml
+      - painterapi/**
+      - .github/workflows/ci.painterapi.yaml
 
 defaults:
   run:
-    working-directory: painter_api
+    working-directory: painterapi
 
 jobs:
   build:
