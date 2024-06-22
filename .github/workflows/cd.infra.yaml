@@ -12,6 +12,7 @@ env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CD }}
   PROJECT: "artist-2d"
   DEPLOY_ENV: "dev"
+  REGION: "us-west1"
 
 
 defaults:
@@ -36,6 +37,10 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           version: '>= 363.0.0'
+
+      - name: Docker auth for GCP Artifact Registry
+        run: |-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
       - uses: hashicorp/setup-terraform@v3
         with:
