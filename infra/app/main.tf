@@ -1,5 +1,9 @@
 terraform {
   required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "3.0.2"
+    }
     google = {
       source  = "hashicorp/google"
       version = "5.32.0"
@@ -15,7 +19,6 @@ terraform {
   }
 }
 
-
 provider "google" {
   project = var.project
   region  = var.region
@@ -29,10 +32,7 @@ data "google_client_config" "current" {
 }
 
 locals {
-  image_base     = "${var.region}-docker.pkg.dev/${var.project}/${var.project}/"
-  client_tag     = var.app_versions["client"]
-  voting_tag     = var.app_versions["votingapi"]
-  storageapi_tag = var.app_versions["storageapi"]
+  storageapi_image = tolist(docker_image.app["storageapi"].build)[0].tag[0]
 }
 
 ################################################################
@@ -59,7 +59,7 @@ resource "google_cloud_run_v2_service" "storageapi" {
     }
 
     containers {
-      image = "${local.image_base}storageapi:${local.storageapi_tag}"
+      image = local.storageapi_image
 
       ports {
         container_port = 8000
