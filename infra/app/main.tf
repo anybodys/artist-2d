@@ -60,18 +60,9 @@ resource "google_cloud_run_v2_service" "storageapi" {
 
     containers {
       image = "${local.image_base}storageapi:${local.storageapi_tag}"
-      # TODO: gunicorn
-      command = ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
-      startup_probe {
-        tcp_socket {
-          port = 8000
-        }
-      }
-      liveness_probe {
-        http_get {
-          path = "/api/health"
-        }
+      ports {
+        container_port = 8000
       }
 
       env {
