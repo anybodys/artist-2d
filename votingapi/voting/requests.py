@@ -13,11 +13,14 @@ class Session:
 
   def get(self, path, *args, **kwargs):
     start_time = time.time()
-    url = f'{self.base_url}/api/{path}'
-    response = self.session.get(url, *args, **kwargs)
+    response = self.session.get(f'{self.base_url}/api/{path}', *args, **kwargs)
     total_time = time.time() - start_time
 
     # Note: Loggers still use `%s` strings because of when the variables get called.
-    current_app.logger.info('GET: "%s" returned %s in %s seconds', url, response.status_code, total_time)
+    current_app.logger.info(
+      'GET: "%s" returned %s in %s seconds',
+      response.url, response.status_code, total_time)
+    if response.status_code >= 400:
+      current_app.logger.error(response.content)
 
     return response.json()
