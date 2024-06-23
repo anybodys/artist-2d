@@ -1,4 +1,7 @@
+import logging
+
 from flask import Flask, jsonify, request
+from flask.logging import default_handler
 from flask_cors import CORS
 
 from voting import storage as art_storage
@@ -7,6 +10,7 @@ from voting import storage as art_storage
 def create_app():
   app = Flask(__name__)
   CORS(app)
+  default_handler.setLevel(logging.INFO)
   return app
 
 
