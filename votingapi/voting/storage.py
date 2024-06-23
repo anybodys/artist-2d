@@ -1,7 +1,8 @@
 import os
 
-from flask import current_app, g
-import requests
+from flask import g
+
+from voting import requests
 
 
 # Pull here so we fail early if not defined.
@@ -17,8 +18,7 @@ def get_api():
 class StorageApi:
 
   def __init__(self):
-    self.session = requests.Session()
+    self.session = requests.Session(BASE_URL)
 
   def get_art(self, generation):
-    response = self.session.get(f'{BASE_URL}/api/art', params={'gen': generation})
-    return response.json()
+    return self.session.get(f'art', params={'gen': generation})
