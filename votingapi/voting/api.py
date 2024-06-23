@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from voting.storage import art_storage, db
+from voting import storage as art_storage
 
 
 def create_app():
@@ -21,8 +21,6 @@ def health_check():
 @app.get("/art")
 def art():
   gen = request.args.get('gen', -1)
-  if gen < 0:
-    gen = db.get_current_generation()
 
   # Return a list of all the requested generation's art metadata.
-  return jsonify(art_storage.ArtStorage().get_art(gen))
+  return jsonify(art_storage.get_api().get_art(gen))
