@@ -32,7 +32,7 @@ data "google_client_config" "current" {
 }
 
 locals {
-  storageapi_image = tolist(docker_image.app["storageapi"].build)[0].tag[0]
+  storageapi_image = docker_registry_image.app["storageapi"].name
 }
 
 ################################################################

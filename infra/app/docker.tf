@@ -19,11 +19,6 @@ resource "docker_image" "app" {
     context = "${path.cwd}/../../${each.key}"
     tag     = ["${local.image_root}/${each.key}:${each.value}"]
   }
-
-  triggers = {
-    # Trigger a build if this value has changed.
-    version_tag = each.value
-  }
 }
 
 resource "docker_registry_image" "app" {
