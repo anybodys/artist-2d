@@ -2,12 +2,8 @@
 ## Storage API
 ################################################################
 
-locals {
-  storageapi_image = docker_registry_image.app["storageapi"].name
-}
-
 resource "google_service_account" "storageapi" {
-  account_id   = "cloud-run-service-account"
+  account_id   = "cloud-run-storageapi"
   display_name = "Service account for Cloud Run Storage API"
 }
 

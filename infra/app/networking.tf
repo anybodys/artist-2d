@@ -150,12 +150,6 @@ data "google_cloud_run_service" "client" {
   project  = var.project
 }
 
-data "google_cloud_run_service" "votingapi" {
-  name     = "votingapi"
-  location = var.region
-  project  = var.project
-}
-
 resource "google_cloud_run_domain_mapping" "client" {
   name     = var.domain
   location = data.google_cloud_run_service.client.location
