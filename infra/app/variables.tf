@@ -2,7 +2,7 @@ variable "app_versions" {
   type = map(string)
   default = {
     client : "0.1.0",
-    votingapi : "0.1.1",
+    votingapi : "0.1.2",
     painterapi : "0.1.0",
     storageapi : "0.0.1",
   }
