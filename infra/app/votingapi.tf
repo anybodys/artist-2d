@@ -29,6 +29,10 @@ resource "google_cloud_run_v2_service" "votingapi" {
         name  = "GOOGLE_CLOUD_PROJECT"
         value = var.project
       }
+      env {
+        name  = "STORAGEAPI_URL"
+        value = google_cloud_run_v2_service.storageapi.uri
+      }
 
     }
     service_account = google_service_account.votingapi.email
