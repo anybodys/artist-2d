@@ -2,6 +2,46 @@ locals {
   api_domain = "api.${var.domain}"
 }
 
+# TODO: This should be built in Terraform.
+data "google_cloud_run_service" "client" {
+  name     = "client"
+  location = var.region
+  project  = var.project
+}
+
+resource "google_compute_region_network_endpoint_group" "client_neg" {
+  name                  = "client-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  cloud_run {
+    service = data.google_cloud_run_service.client.name
+  }
+}
+
+resource "google_compute_region_network_endpoint_group" "votingapi_neg" {
+  name                  = "votingapi-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  cloud_run {
+    service = google_cloud_run_v2_service.votingapi.name
+  }
+}
+
+resource "google_compute_region_network_endpoint_group" "internalapi_neg" {
+  name                  = "internalapi-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  cloud_run {
+    #url_mask = "<service>"
+    service = google_cloud_run_v2_service.storageapi.name
+  }
+}
+
+
+################################################################
+## External
+################################################################
+
 resource "google_dns_managed_zone" "default" {
   name        = "kmdcodes-com"
   description = "DNS zone for domain: kmdcodes.com"
@@ -44,14 +84,6 @@ resource "google_certificate_manager_dns_authorization" "default" {
     "terraform" : true
   }
 }
-
-#resource "google_dns_record_set" "api_cname" {
-#  name         = "${local.api_domain}."
-#  managed_zone = google_dns_managed_zone.default.name
-#  type         = "CNAME"
-#  ttl          = 300
-#  rrdatas = ["${var.domain}."]
-#}
 
 resource "google_dns_record_set" "a" {
   name         = google_dns_managed_zone.default.dns_name
@@ -102,11 +134,11 @@ module "lb-http" {
         enable = false
       }
     }
-    api = {
-      description = "API Gateway"
+    votingapi = {
+      description = "External API"
       groups = [
         {
-          group = google_compute_region_network_endpoint_group.api_neg.id
+          group = google_compute_region_network_endpoint_group.votingapi_neg.id
         }
       ]
       enable_cdn = false
@@ -122,32 +154,6 @@ module "lb-http" {
 
   create_url_map = false
   url_map        = google_compute_url_map.default.id
-}
-
-resource "google_compute_region_network_endpoint_group" "client_neg" {
-  provider              = google-beta
-  name                  = "client-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-  cloud_run {
-    service = data.google_cloud_run_service.client.name
-  }
-}
-
-resource "google_compute_region_network_endpoint_group" "api_neg" {
-  provider              = google-beta
-  name                  = "api-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-  cloud_run {
-    url_mask = "api.${var.domain}/<service>"
-  }
-}
-
-data "google_cloud_run_service" "client" {
-  name     = "client"
-  location = var.region
-  project  = var.project
 }
 
 resource "google_cloud_run_domain_mapping" "client" {
@@ -191,6 +197,83 @@ resource "google_compute_url_map" "default" {
 
   path_matcher {
     name            = "api"
-    default_service = "artist-backend-api"
+    default_service = "artist-backend-votingapi"
+  }
+}
+
+################################################################
+## Internal
+################################################################
+
+resource "google_compute_network" "ilb_network" {
+  provider = google-beta
+
+  name = "l7-ilb-network"
+
+  # We want custom subnets.
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "proxy" {
+  provider = google-beta
+
+  name          = "l7-ilb-proxy-subnet"
+  ip_cidr_range = "10.0.0.0/24"
+  purpose       = "REGIONAL_MANAGED_PROXY"
+  region        = var.region
+  role          = "ACTIVE"
+  network       = google_compute_network.ilb_network.id
+}
+
+resource "google_compute_subnetwork" "ilb" {
+  provider = google-beta
+
+  name          = "l7-ilb-subnet"
+  ip_cidr_range = "10.0.1.0/24"
+  region        = var.region
+  network       = google_compute_network.ilb_network.id
+}
+
+resource "google_compute_address" "ilb" {
+  name         = "l7-ilb-address"
+  subnetwork   = google_compute_subnetwork.ilb.id
+  address_type = "INTERNAL"
+  region       = var.region
+}
+
+resource "google_compute_forwarding_rule" "ilb" {
+  name                  = "l7-ilb-forwarding-rule"
+  region                = var.region
+  depends_on            = [google_compute_subnetwork.proxy]
+  ip_protocol           = "TCP"
+  ip_address            = google_compute_address.ilb.address
+  load_balancing_scheme = "INTERNAL_MANAGED"
+  port_range            = "80"
+  target                = google_compute_region_target_http_proxy.ilb.id
+  network               = google_compute_network.ilb_network.id
+  subnetwork            = google_compute_subnetwork.ilb.id
+  network_tier          = "PREMIUM"
+}
+
+resource "google_compute_region_target_http_proxy" "ilb" {
+  name    = "l7-ilb-target-http-proxy"
+  region  = google_compute_region_backend_service.internalapi.region
+  url_map = google_compute_region_url_map.ilb.id
+}
+
+resource "google_compute_region_url_map" "ilb" {
+  name            = "l7-ilb-regional-url-map"
+  region          = google_compute_region_backend_service.internalapi.region
+  default_service = google_compute_region_backend_service.internalapi.id
+}
+
+resource "google_compute_region_backend_service" "internalapi" {
+  name                  = "internalapi"
+  region                = var.region
+  load_balancing_scheme = "INTERNAL_MANAGED"
+
+  backend {
+    group          = google_compute_region_network_endpoint_group.internalapi_neg.self_link
+    balancing_mode = "UTILIZATION"
   }
 }
