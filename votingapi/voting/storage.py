@@ -21,4 +21,4 @@ class StorageApi:
     self.session = requests.Session(BASE_URL)
 
   def get_art(self, generation):
-    return self.session.get(f'art', params={'gen': generation})
+    return self.session.get('art', params={'gen': generation})

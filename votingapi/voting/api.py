@@ -23,7 +23,7 @@ def health_check():
 
 @app.get("/art")
 def art():
-  gen = request.args.get('gen', -1)
+  gen = request.args.get('gen', 0)
 
   # Return a list of all the requested generation's art metadata.
   return jsonify(art_storage.get_api().get_art(gen))
