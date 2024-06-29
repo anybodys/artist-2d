@@ -30,11 +30,20 @@ resource "google_cloud_run_v2_service" "votingapi" {
         value = var.project
       }
       env {
-        name  = "STORAGEAPI_URL"
-        value = google_cloud_run_v2_service.storageapi.uri
+        name = "STORAGEAPI_URL"
+        # Go via the load balancer. see networking.tf
+        value = "http://${google_compute_address.ilb.address}"
       }
 
     }
+
+    vpc_access {
+      network_interfaces {
+        network    = google_compute_network.ilb_network.id
+        subnetwork = google_compute_subnetwork.ilb.id
+      }
+    }
+
     service_account = google_service_account.votingapi.email
   }
 }
