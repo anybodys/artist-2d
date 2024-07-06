@@ -3,7 +3,6 @@
 setup:
 	pip install --upgrade --user pipenv
 	pipenv install --dev
-	npm install -g api-spec-converter
 
 run: run-api
 
@@ -21,9 +20,6 @@ db-shell:
 
 test:
 	pipenv run docker-compose -f docker-compose-test.yml up --build --abort-on-container-exit
-
-deploy:
-	gcloud run deploy --source . storageapi
 
 clean:
 	find . -name '*~' -delete

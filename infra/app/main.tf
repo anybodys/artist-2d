@@ -32,6 +32,5 @@ data "google_client_config" "current" {
 }
 
 locals {
-  storageapi_image = docker_registry_image.app["storageapi"].name
-  votingapi_image  = docker_registry_image.app["votingapi"].name
+  api_image = docker_registry_image.app["api"].name
 }

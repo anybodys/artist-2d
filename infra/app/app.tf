@@ -1,16 +1,16 @@
 ################################################################
-## Storage API
+## API
 ################################################################
 
-resource "google_service_account" "storageapi" {
-  account_id   = "cloud-run-storageapi"
-  display_name = "Service account for Cloud Run Storage API"
+resource "google_service_account" "api" {
+  account_id   = "cloud-run-api"
+  display_name = "Service account for Cloud Run API"
 }
 
-resource "google_cloud_run_v2_service" "storageapi" {
-  name     = "storageapi"
+resource "google_cloud_run_v2_service" "api" {
+  name     = "api"
   location = var.region
-  ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
+  ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   template {
 
@@ -22,8 +22,8 @@ resource "google_cloud_run_v2_service" "storageapi" {
     }
 
     containers {
-      name  = "storageapi"
-      image = local.storageapi_image
+      name  = "api"
+      image = local.api_image
 
       ports {
         container_port = 8000
@@ -42,6 +42,10 @@ resource "google_cloud_run_v2_service" "storageapi" {
         value = "/cloudsql/${var.project}:${var.region}:${google_sql_database_instance.artist2d.name}"
       }
       env {
+        name  = "POSTGRES_PORT"
+        value = "5432"
+      }
+      env {
         name = "SECRET_KEY"
         value_source {
           secret_key_ref {
@@ -49,6 +53,10 @@ resource "google_cloud_run_v2_service" "storageapi" {
             version = "latest"
           }
         }
+      }
+      env {
+        name  = "POSTGRES_DB"
+        value = "artist"
       }
       env {
         name  = "POSTGRES_USER"
@@ -68,20 +76,33 @@ resource "google_cloud_run_v2_service" "storageapi" {
         mount_path = "/cloudsql"
       }
     }
-    service_account = google_service_account.storageapi.email
+
+    service_account = google_service_account.api.email
   }
 }
+
+# Allow unauthed requests.
+resource "google_cloud_run_service_iam_binding" "api" {
+  location = google_cloud_run_v2_service.api.location
+  service  = google_cloud_run_v2_service.api.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
+
+## DB things.
 
 resource "google_secret_manager_secret_iam_member" "storage-db-api" {
   secret_id = google_secret_manager_secret.storageapi-db-pass.id
   role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.storageapi.email}"
+  member    = "serviceAccount:${google_service_account.api.email}"
 }
 
 resource "google_project_iam_member" "cloudsql" {
   project = var.project
   role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${google_service_account.storageapi.email}"
+  member  = "serviceAccount:${google_service_account.api.email}"
 }
 
 ## Django Secret Key secret.
@@ -107,5 +128,5 @@ resource "google_secret_manager_secret_version" "django-secret-current" {
 resource "google_secret_manager_secret_iam_member" "django-secret-key" {
   secret_id = google_secret_manager_secret.django-secret-key.id
   role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.storageapi.email}"
+  member    = "serviceAccount:${google_service_account.api.email}"
 }
