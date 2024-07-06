@@ -203,5 +203,14 @@ resource "google_compute_url_map" "default" {
   path_matcher {
     name            = "api"
     default_service = google_compute_backend_service.api.id
+    path_rule {
+      paths   = ["/*"]
+      service = google_compute_backend_service.api.id
+      route_action {
+        url_rewrite {
+          path_prefix_rewrite = "/api/"
+        }
+      }
+    }
   }
 }
