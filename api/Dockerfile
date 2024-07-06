@@ -43,4 +43,4 @@ ENTRYPOINT ["/home/appuser/entrypoint.sh"]
 ENV PORT=8000
 
 # Sets the url path prefix.
-#ENV SCRIPT_NAME=/storageapi
+#ENV SCRIPT_NAME=/api

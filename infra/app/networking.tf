@@ -18,25 +18,30 @@ resource "google_compute_region_network_endpoint_group" "client_neg" {
   }
 }
 
-resource "google_compute_region_network_endpoint_group" "votingapi_neg" {
-  name                  = "votingapi-neg"
+resource "google_compute_region_network_endpoint_group" "api_neg" {
+  name                  = "api-neg"
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = google_cloud_run_v2_service.votingapi.name
+    service = google_cloud_run_v2_service.api.name
   }
 }
 
-resource "google_compute_region_network_endpoint_group" "internalapi_neg" {
-  name                  = "internalapi-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-  cloud_run {
-    #url_mask = "<service>"
-    service = google_cloud_run_v2_service.storageapi.name
+resource "google_compute_backend_service" "client" {
+  name = "client-backend"
+
+  backend {
+    group = google_compute_region_network_endpoint_group.client_neg.id
   }
 }
 
+resource "google_compute_backend_service" "api" {
+  name = "api-backend"
+
+  backend {
+    group = google_compute_region_network_endpoint_group.api_neg.id
+  }
+}
 
 ################################################################
 ## External
@@ -134,11 +139,11 @@ module "lb-http" {
         enable = false
       }
     }
-    votingapi = {
+    api = {
       description = "External API"
       groups = [
         {
-          group = google_compute_region_network_endpoint_group.votingapi_neg.id
+          group = google_compute_region_network_endpoint_group.api_neg.id
         }
       ]
       enable_cdn = false
@@ -177,7 +182,7 @@ resource "google_cloud_run_service_iam_member" "public-access" {
 
 resource "google_compute_url_map" "default" {
   name            = "http-lb"
-  default_service = "artist-backend-client"
+  default_service = google_compute_backend_service.client.id
 
   host_rule {
     hosts        = [var.domain]
@@ -191,89 +196,12 @@ resource "google_compute_url_map" "default" {
 
   path_matcher {
     name            = "client"
-    default_service = "artist-backend-client"
+    default_service = google_compute_backend_service.client.id
 
   }
 
   path_matcher {
     name            = "api"
-    default_service = "artist-backend-votingapi"
-  }
-}
-
-################################################################
-## Internal
-################################################################
-
-resource "google_compute_network" "ilb_network" {
-  provider = google-beta
-
-  name = "l7-ilb-network"
-
-  # We want custom subnets.
-  auto_create_subnetworks = false
-}
-
-resource "google_compute_subnetwork" "proxy" {
-  provider = google-beta
-
-  name          = "l7-ilb-proxy-subnet"
-  ip_cidr_range = "10.0.0.0/24"
-  purpose       = "REGIONAL_MANAGED_PROXY"
-  region        = var.region
-  role          = "ACTIVE"
-  network       = google_compute_network.ilb_network.id
-}
-
-resource "google_compute_subnetwork" "ilb" {
-  provider = google-beta
-
-  name          = "l7-ilb-subnet"
-  ip_cidr_range = "10.0.1.0/24"
-  region        = var.region
-  network       = google_compute_network.ilb_network.id
-}
-
-resource "google_compute_address" "ilb" {
-  name         = "l7-ilb-address"
-  subnetwork   = google_compute_subnetwork.ilb.id
-  address_type = "INTERNAL"
-  region       = var.region
-}
-
-resource "google_compute_forwarding_rule" "ilb" {
-  name                  = "l7-ilb-forwarding-rule"
-  region                = var.region
-  depends_on            = [google_compute_subnetwork.proxy]
-  ip_protocol           = "TCP"
-  ip_address            = google_compute_address.ilb.address
-  load_balancing_scheme = "INTERNAL_MANAGED"
-  port_range            = "80"
-  target                = google_compute_region_target_http_proxy.ilb.id
-  network               = google_compute_network.ilb_network.id
-  subnetwork            = google_compute_subnetwork.ilb.id
-  network_tier          = "PREMIUM"
-}
-
-resource "google_compute_region_target_http_proxy" "ilb" {
-  name    = "l7-ilb-target-http-proxy"
-  region  = google_compute_region_backend_service.internalapi.region
-  url_map = google_compute_region_url_map.ilb.id
-}
-
-resource "google_compute_region_url_map" "ilb" {
-  name            = "l7-ilb-regional-url-map"
-  region          = google_compute_region_backend_service.internalapi.region
-  default_service = google_compute_region_backend_service.internalapi.id
-}
-
-resource "google_compute_region_backend_service" "internalapi" {
-  name                  = "internalapi"
-  region                = var.region
-  load_balancing_scheme = "INTERNAL_MANAGED"
-
-  backend {
-    group          = google_compute_region_network_endpoint_group.internalapi_neg.self_link
-    balancing_mode = "UTILIZATION"
+    default_service = google_compute_backend_service.api.id
   }
 }
