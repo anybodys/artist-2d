@@ -20,6 +20,10 @@ from django.urls import include, path
 urlpatterns = [
   # Local endpoints.
   path("api/", include("api.urls")),
+
   # Django built-ins
   path("admin/", admin.site.urls),
+
+  # Social Auth
+  path('accounts/', include('allauth.urls')),
 ]

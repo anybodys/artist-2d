@@ -44,3 +44,8 @@ Bump the version in (variables.tf)[../infra/app/variables.tf] and merge PR. The 
 ## Learn More
 
 [Tech Spec](docs/tech_spec.md)
+
+
+## Social Auth
+
+http://localhost:8000/accounts/google/login/?process=login
