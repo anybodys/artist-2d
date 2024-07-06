@@ -1,5 +1,5 @@
 function getUrl(path) {
-  const baseUrl = process.env.REACT_APP_VOTING_API_BASE_URL;
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
   return baseUrl + path;
 }
 
