@@ -1,8 +1,8 @@
 variable "app_versions" {
   type = map(string)
   default = {
-    client : "0.2.0.p0",
-    api : "0.1.0.p1",
+    client : "0.2.1",
+    api : "0.1.1",
   }
 
 }
