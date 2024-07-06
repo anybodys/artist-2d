@@ -2,19 +2,12 @@ locals {
   api_domain = "api.${var.domain}"
 }
 
-# TODO: This should be built in Terraform.
-data "google_cloud_run_service" "client" {
-  name     = "client"
-  location = var.region
-  project  = var.project
-}
-
 resource "google_compute_region_network_endpoint_group" "client_neg" {
   name                  = "client-neg"
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = data.google_cloud_run_service.client.name
+    service = google_cloud_run_v2_service.client.name
   }
 }
 
@@ -163,19 +156,19 @@ module "lb-http" {
 
 resource "google_cloud_run_domain_mapping" "client" {
   name     = var.domain
-  location = data.google_cloud_run_service.client.location
+  location = google_cloud_run_v2_service.client.location
   metadata {
-    namespace = data.google_cloud_run_service.client.project
+    namespace = google_cloud_run_v2_service.client.project
   }
   spec {
-    route_name = data.google_cloud_run_service.client.name
+    route_name = google_cloud_run_v2_service.client.name
   }
 }
 
 resource "google_cloud_run_service_iam_member" "public-access" {
-  location = data.google_cloud_run_service.client.location
-  project  = data.google_cloud_run_service.client.project
-  service  = data.google_cloud_run_service.client.name
+  location = google_cloud_run_v2_service.client.location
+  project  = google_cloud_run_v2_service.client.project
+  service  = google_cloud_run_v2_service.client.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

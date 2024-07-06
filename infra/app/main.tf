@@ -32,5 +32,6 @@ data "google_client_config" "current" {
 }
 
 locals {
-  api_image = docker_registry_image.app["api"].name
+  client_image = docker_registry_image.app["client"].name
+  api_image    = docker_registry_image.app["api"].name
 }
