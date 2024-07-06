@@ -1,4 +1,57 @@
 ################################################################
+## Client
+################################################################
+
+resource "google_service_account" "client" {
+  account_id   = "cloud-run-client"
+  display_name = "Service account for Cloud Run Client"
+}
+
+resource "google_cloud_run_v2_service" "client" {
+  name     = "client"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+
+    containers {
+      name  = "client"
+      image = local.client_image
+
+      ports {
+        container_port = 3000
+      }
+
+      env {
+        name  = "ENV"
+        value = "prod"
+      }
+      env {
+        name  = "GOOGLE_CLOUD_PROJECT"
+        value = var.project
+      }
+      env {
+        name  = "REACT_APP_VOTING_API_BASE_URL"
+        value = "https://${local.api_domain}"
+      }
+    }
+
+    service_account = google_service_account.client.email
+  }
+}
+
+# Allow unauthed requests.
+resource "google_cloud_run_service_iam_binding" "client" {
+  location = google_cloud_run_v2_service.client.location
+  service  = google_cloud_run_v2_service.client.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
+
+
+################################################################
 ## API
 ################################################################
 
