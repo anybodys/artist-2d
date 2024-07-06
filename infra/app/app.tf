@@ -21,19 +21,6 @@ resource "google_cloud_run_v2_service" "client" {
       ports {
         container_port = 3000
       }
-
-      env {
-        name  = "ENV"
-        value = "prod"
-      }
-      env {
-        name  = "GOOGLE_CLOUD_PROJECT"
-        value = var.project
-      }
-      env {
-        name  = "REACT_APP_VOTING_API_BASE_URL"
-        value = "https://${local.api_domain}"
-      }
     }
 
     service_account = google_service_account.client.email
