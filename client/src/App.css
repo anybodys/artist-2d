@@ -39,6 +39,6 @@
 
 
 .Painting {
-    border: solid #000;
-    margin: 2px;
+    display: inline;
+    margin: 1em;
 }
