@@ -16,3 +16,14 @@ def art(request):
 
   # Return a list of all the requested generation's art metadata.
   return JsonResponse(art_storage.ArtStorage().get_art(gen))
+
+
+def me(request):
+  ret = {}
+  if request.user.is_authenticated:
+    ret.update({
+      'username': request.user.get_username(),
+      'name': request.user.first_name,
+      'email': request.user.email,
+    })
+  return JsonResponse(ret)

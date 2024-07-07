@@ -111,6 +111,25 @@ resource "google_cloud_run_v2_service" "api" {
           }
         }
       }
+      env {
+        name = "GOOGLE_OAUTH2_KEY"
+        value_source {
+          secret_key_ref {
+            secret  = "google-oauth-key"
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "GOOGLE_OAUTH2_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = "google-oauth-secret"
+            version = "latest"
+          }
+        }
+      }
+
       volume_mounts {
         name       = "cloudsql"
         mount_path = "/cloudsql"
@@ -131,13 +150,31 @@ resource "google_cloud_run_service_iam_binding" "api" {
   ]
 }
 
-## DB things.
+## Secrets and access.
 
 resource "google_secret_manager_secret_iam_member" "storage-db-api" {
   secret_id = google_secret_manager_secret.storageapi-db-pass.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.api.email}"
 }
+
+resource "google_secret_manager_secret" "api-secrets" {
+  for_each  = toset(["google-oauth-key", "google-oauth-secret"])
+  secret_id = each.key
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_iam_member" "api-secrets" {
+  for_each  = google_secret_manager_secret.api-secrets
+  secret_id = each.value.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.api.email}"
+}
+
+## DB things.
 
 resource "google_project_iam_member" "cloudsql" {
   project = var.project

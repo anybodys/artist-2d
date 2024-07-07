@@ -8,6 +8,7 @@ django = "*"
 psycopg2-binary = "*"
 google-cloud-storage = "*"
 django-cors-headers = "*"
+django-allauth = {extras = ["socialaccount"], version = "*"}
 
 [dev-packages]
 

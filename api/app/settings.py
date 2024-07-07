@@ -46,6 +46,7 @@ CORS_ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -59,8 +60,12 @@ INSTALLED_APPS = [
   'django.contrib.staticfiles',
 
   'corsheaders',
-
   'api',
+
+  'allauth',
+  'allauth.account',
+  'allauth.socialaccount',
+  'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +76,9 @@ MIDDLEWARE = [
   #'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
+
+  'allauth.account.middleware.AccountMiddleware',
+
   #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -147,3 +155,38 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Social Auth with allauth
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+  'google': {
+    # For each OAuth based provider, either add a ``SocialApp``
+    # (``socialaccount`` app) containing the required client
+    # credentials, or list them here:
+    'APP': {
+      'client_id': os.environ['GOOGLE_OAUTH2_KEY'],
+      'secret': os.environ['GOOGLE_OAUTH2_SECRET'],
+      'key': '',
+    },
+    'SCOPE': [
+      'profile',
+      'email',
+    ],
+    'AUTH_PARAMS': {
+      'access_type': 'online',
+    },
+  },
+}
+
+SOCIALACCOUNT_ONLY = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
