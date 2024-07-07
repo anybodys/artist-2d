@@ -5,8 +5,11 @@ import App from './App';
 
 jest.mock("./api", () => {
   const VotingApi = {
-    get: async function () {
-      console.log('here');
+    me: async function() {
+      return ({});
+    },
+
+    getArt: async function () {
       return ({art: [{
         artist_id: "mock-artist-id",
         generation: "0",

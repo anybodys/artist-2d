@@ -3,10 +3,18 @@ function getUrl(path) {
   return baseUrl + path;
 }
 
+export const LoginUri = getUrl('/accounts/google/login/');
+
 export const VotingApi = {
-  get: async function () {
+  me: async function() {
+    const response = await fetch(getUrl('/me'), {
+      credentials: "include",
+    });
+    return response.json();
+  },
+
+  getArt: async function () {
     const response = await fetch(getUrl('/art'));
-    const paintingsData = await response.json();
-    return paintingsData;
+    return await response.json();
   }
 }
