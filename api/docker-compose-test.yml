@@ -4,17 +4,16 @@ services:
   db:
     image: postgres:15
     restart: always
-    shm_size: 128mb
     env_file:
       - ./.env.test
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   tests:
     build: .
-    command: python manage.py test
+    entrypoint: python manage.py test
     volumes:
       - ./:/home/appuser/
-    ports:
-      - 8000:8000
     env_file:
       - ./.env.test
     depends_on:
