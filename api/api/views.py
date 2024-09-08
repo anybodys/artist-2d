@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 
 from api import art_storage
@@ -27,3 +28,13 @@ def me(request):
       'email': request.user.email,
     })
   return JsonResponse(ret)
+
+
+@login_required
+def vote(request):
+  art_id = request.POST['art']
+  new_vote = models.Vote.objects.create(
+    user=request.user.votinguser,
+    art_id=art_id,
+  )
+  return JsonResponse({})

@@ -44,7 +44,7 @@ This is a WIP.
 ## Run
 
 ```
-make paint
+make run
 ```
 
 This generate and an image to a path I find convenient because I haven't made it a variable yet.
@@ -59,7 +59,7 @@ TODO: CI
 
 ## Deploy
 
-Nothing to deploy yet. :)
+CI/CD deploys for you. Yay!
 
 
 ## Learn More
