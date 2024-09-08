@@ -10,6 +10,9 @@ generation.
 
 ## Server Architecture
 
+
+DEPRECATED -- there's now a much simpler one. Haven't updated the diagram yet.
+
 ![System Diagram](Artist2d.svg "System Diagram")
 
 
@@ -58,7 +61,7 @@ generation.
 
 ## Database
 
-All databases should have metadata:
+All database tables should have metadata:
 ```
 created_date
 updated_date
@@ -66,25 +69,26 @@ deleted_date
 ```
 
 ```
-Heart:
-    id: pk, uuid
-    paiting_id: fk
-    user_id: fk
-constraint: unique(painting_id, user_id)
+Vote:
+    id: pk, int
+    art: fk
+    user: fk
+constraint: unique(art, user)
 
-Dna:
-    artist_id: pk, uuid
+Art:
+    id: pk, int
+    public_link: varchar (URL)
     generation: fk
+    artist: fk
+
+Artist:
+    id: pk, int
     dna: varchar
-    hearts: number, total hearts in it's active time.
+    generation: fk
+
 
 Generation:
-    id: pk, inc_number
+    id: pk, int
     active_date: timestamp, the datetime it went active for hearting.
     inactive_date: timestamp, the datetime it went inactive for hearting.
-
-Time:
-    current_art_generation: fk(Generation)
-    current_dna_generation: fk(Generation)
-    generation_length_s: number
 ```
