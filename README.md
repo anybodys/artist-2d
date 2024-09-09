@@ -28,7 +28,7 @@ This is a WIP.
 
 1. You will need python (see Pipfile for version) and pip.
 2. You will need to set to create a gcp iam role for your local dev (name it "YOURNAME-local-dev") and download the json secret stuff.
-3. Create a `.env` file that specifies GCP envvars.
+3. Create a `.env` file that specifies GCP envvars for `/api`.
    - You can start by copying the example and updating the values. `cp .env.example .env`
 4. `make setup` will handle pipenv fun for you.
 5. Do something to improve this getting started guide!
@@ -43,23 +43,31 @@ This is a WIP.
 
 ## Run
 
+`cd` into either `/client` or `/api` depending which you want to run. To run both for a functional local system, use two tabs and run both the Client and API.
+
+
 ```
 make run
 ```
 
-This generate and an image to a path I find convenient because I haven't made it a variable yet.
-
 ## Test
+
+`cd` into either `/client` or `/api` depending which you want to test.
+
 
 ```
 make test
 ```
 
-TODO: CI
-
 ## Deploy
 
-CI/CD deploys for you. Yay!
+CD deploys for you. Yay!
+
+1. Ensure CI is passing on main.
+1. Bump the version in (variables.tf)[infra/app/variables.tf] for the Client or the API depending which you want to deploy.
+1. Create a new PR with the version bump.
+1. Merge the PR
+1. Watch the Infra CD pipeine do its magic! It'll build a new image and update the Cloud Run function.
 
 
 ## Learn More
