@@ -44,16 +44,11 @@ class Generation(Datetime):
 class Artist(Datetime):
   id = models.AutoField(primary_key=True)
   dna = models.TextField()
-
-
-class Art(Datetime):
-  id = models.AutoField(primary_key=True)
   public_link = models.URLField(max_length=200)
   generation = models.ForeignKey(Generation, on_delete=models.CASCADE)
-  artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
 
 
 class Vote(Datetime):
   id = models.AutoField(primary_key=True)
   user = models.ForeignKey(VotingUser, on_delete=models.CASCADE)
-  art = models.ForeignKey(Art, on_delete=models.CASCADE)
+  artist = models.ForeignKey(Artist, on_delete=models.CASCADE)

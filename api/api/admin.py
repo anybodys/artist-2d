@@ -16,7 +16,6 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(models.Generation)
 admin.site.register(models.Artist)
-admin.site.register(models.Art)
 admin.site.register(models.Vote)
 # Re-register UserAdmin
 admin.site.unregister(User)
