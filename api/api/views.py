@@ -32,9 +32,9 @@ def me(request):
 
 @login_required
 def vote(request):
-  art_id = request.POST['art']
+  artist_id = request.POST['artist']
   new_vote = models.Vote.objects.create(
     user=request.user.votinguser,
-    art_id=art_id,
+    artist_id=artist_id,
   )
   return JsonResponse({})

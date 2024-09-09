@@ -46,33 +46,31 @@ class TestApi(TestCase):
       user=models.User.objects.create(),
     )
     self.client.force_login(test_user.user, backend=None)
-    test_art = models.Art.objects.create(
+    test_artist = models.Artist.objects.create(
       public_link='http://test.url',
       generation=models.Generation.objects.create(),
-      artist=models.Artist.objects.create(),
     )
 
     response = self.client.post(
       '/api/vote',
-      {'art': test_art.id},
+      {'artist': test_artist.id},
     )
 
     # Validate that it returned success & empty response.
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.json(), {})
     # And it saved a vote to the DB. Get should run without throwing an error.
-    models.Vote.objects.get(user=test_user, art=test_art)
+    models.Vote.objects.get(user=test_user, artist=test_artist)
 
   def test_vote_unauthed(self):
-    test_art = models.Art.objects.create(
+    test_artist = models.Artist.objects.create(
       public_link='http://test.url',
       generation=models.Generation.objects.create(),
-      artist=models.Artist.objects.create(),
     )
 
     response = self.client.post(
       '/api/vote',
-      {'art': test_art.id},
+      {'artist': test_artist.id},
     )
 
     # Validate that it returned a redirect.
