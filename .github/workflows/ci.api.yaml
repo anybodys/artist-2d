@@ -1,22 +1,19 @@
-name: CI Painter API
+name: CI API
 
 on:
   push:
     paths:
-      - painterapi/**
-      - .github/workflows/ci.painterapi.yaml
+      - api/**
+      - .github/workflows/ci.api.yaml
 
 defaults:
   run:
-    working-directory: painterapi
+    working-directory: api
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
-    env:
-      DISPLAY: :99.0
 
     steps:
       - uses: actions/checkout@v2
@@ -26,10 +23,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
-
-
-      - run: sudo apt-get install xvfb
-      - run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Install pipenv
         run: python -m pip install --upgrade pipenv

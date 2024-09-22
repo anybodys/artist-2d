@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  db:
+  db-test:
     image: postgres:15
     restart: always
     env_file:
@@ -14,10 +14,12 @@ services:
     entrypoint: python manage.py test
     volumes:
       - ./:/home/appuser/
+      # x11 forwarding, to connect to the host x11 port.
+      - /tmp/.X11-unix:/tmp/.X11-unix
     env_file:
       - ./.env.test
     depends_on:
-      - db
+      - db-test
 
 volumes:
   postgres_data:

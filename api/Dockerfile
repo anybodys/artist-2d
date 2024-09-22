@@ -20,6 +20,11 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 FROM base AS runtime
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  python3-tk \
+  ghostscript \
+  && rm -rf /var/lib/apt/lists/*
+
 # Copy virtual env from python-deps stage
 COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
