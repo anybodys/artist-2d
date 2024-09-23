@@ -20,6 +20,7 @@ from django.urls import include, path
 urlpatterns = [
   # Local endpoints.
   path("api/", include("api.urls")),
+  path("painter/", include("painter.urls")),
 
   # Django built-ins
   path("admin/", admin.site.urls),

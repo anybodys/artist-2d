@@ -3,11 +3,11 @@ from django.db import models
 
 
 def get_current_generation():
-  # Get the max id of where `active_date` is not `Null`.
+  # Get the max id of where `active_date` is not `Null` or `None`.
   gen = (Generation.objects
          .filter(active_date__isnull=False)
          .order_by("-id")
-         .values_list("id", flat=True)[0])
+         .values_list("id", flat=True).first())
   return gen
 
 
@@ -38,13 +38,13 @@ class Generation(Datetime):
   inaction_date = models.DateTimeField(null=True)
 
   def __str__(self):
-    return f'{self.id}: {self.active_date} - {self.inaction_date}'
+    return f'Generation: {self.id}: {self.active_date} - {self.inaction_date}'
 
 
 class Artist(Datetime):
   id = models.AutoField(primary_key=True)
   dna = models.TextField()
-  public_link = models.URLField(max_length=200)
+  public_link = models.URLField(max_length=200, null=True)
   generation = models.ForeignKey(Generation, on_delete=models.CASCADE)
 
 
