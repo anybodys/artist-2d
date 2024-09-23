@@ -5,24 +5,24 @@ setup:
 	pipenv install --dev
 
 setup-virtual-display:
-	pipenv run Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+	Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
 run: run-api
 
 run-api: setup-virtual-display
-	pipenv run docker-compose up -d --build
+	docker compose up -d --build
 
 db-migrate:
-	pipenv run docker-compose exec api python manage.py migrate --noinput
+	docker compose exec api python manage.py migrate --noinput
 
 db-makemigrations:
-	pipenv run docker-compose exec api python manage.py makemigrations --noinput
+	docker compose exec api python manage.py makemigrations --noinput
 
-db-shell:
-	pipenv run docker-compose exec db psql artist local-user
+db-shell: run
+	docker compose exec db psql artist postgres
 
 test: setup-virtual-display
-	pipenv run docker-compose -f docker-compose-test.yml up --build --abort-on-container-exit --force-recreate --remove-orphans
+	docker compose -f docker-compose-test.yml up --build --abort-on-container-exit --force-recreate
 
 clean:
 	find . -name '*~' -delete
