@@ -54,6 +54,7 @@ class TestApi(TestCase):
     response = self.client.post(
       '/api/vote',
       {'artist': test_artist.id},
+      content_type="application/json",
     )
 
     # Validate that it returned success & empty response.
