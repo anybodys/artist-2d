@@ -113,7 +113,12 @@ DATABASES = {
     "PASSWORD": os.environ['POSTGRES_PASSWORD'],
   }
 }
-
+# Use in-memory SQLite for testing
+if ENV.lower() == 'test':
+  DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+      'NAME': ':memory:'
+  }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
