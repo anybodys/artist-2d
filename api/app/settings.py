@@ -80,6 +80,8 @@ MIDDLEWARE = [
   'allauth.account.middleware.AccountMiddleware',
 
   #'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+  'api.middleware.json_request',
 ]
 
 ROOT_URLCONF = 'app.urls'
