@@ -9,7 +9,12 @@ echo "Waiting for postgres..."
 echo "PostgreSQL started"
 
 python manage.py migrate
+
+# Set up X11 virtual display for painting.
+Xvfb :99 -screen 0 1280x1024x24 -ac -nolisten tcp -nolisten unix &
+
 # TODO: gunicorn
 python manage.py runserver 0.0.0.0:8000
+
 
 exec "$@"

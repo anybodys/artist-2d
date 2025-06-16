@@ -18,7 +18,8 @@ db-migrate:
 db-makemigrations:
 	docker compose exec api python manage.py makemigrations --noinput
 
-db-shell: run
+db-shell:
+	docker compose up -d --build --no-recreate
 	docker compose exec db psql artist postgres
 
 test: setup-virtual-display
