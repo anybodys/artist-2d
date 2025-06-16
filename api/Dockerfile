@@ -1,9 +1,9 @@
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.10-slim as base
+FROM python:3.10-slim AS base
 
 # Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
+ENV PYTHONUNBUFFERED=True
 
 
 FROM base AS python-deps
@@ -23,7 +23,11 @@ FROM base AS runtime
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-tk \
   ghostscript \
+  xvfb \
   && rm -rf /var/lib/apt/lists/*
+
+# To connect to the virtual display. See entrypoint.sh.
+ENV DISPLAY=":99.0"
 
 # Copy virtual env from python-deps stage
 COPY --from=python-deps /.venv /.venv
