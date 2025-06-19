@@ -8,7 +8,7 @@ services:
     #ports:
     #  - 5431:5432
     healthcheck:
-      test: /usr/bin/pg_isready
+      test: /usr/bin/pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
       interval: 5s
       timeout: 10s
       retries: 20
@@ -21,8 +21,8 @@ services:
     volumes:
       - ./:/home/appuser/
       - ${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}
-      # x11 forwarding, to connect to the host x11 port.
-      #- /tmp/.X11-unix:/tmp/.X11-unix
+    # x11 forwarding, to connect to the host x11 port.
+    #- /tmp/.X11-unix:/tmp/.X11-unix
     ports:
       - 8000:8000
     env_file:
