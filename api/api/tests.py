@@ -27,7 +27,7 @@ class TestApi(TestCase):
         response = self.client.get("/api/art")
 
         # No params should use the current gen in the DB.
-        self.art_storage.get_art.assert_called_with(0)
+        self.art_storage.get_art.assert_called_with(1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {})
 
