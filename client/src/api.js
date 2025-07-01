@@ -3,10 +3,11 @@ function getUrl(path) {
   return baseUrl + path;
 }
 
-export const LoginUri = getUrl('/accounts/google/login/');
+// This one is relative to root/host.
+export const LoginUri = '/accounts/google/login/';
 
 export const VotingApi = {
-  me: async function() {
+  me: async function () {
     const response = await fetch(getUrl('/me'), {
       credentials: "include",
     });
@@ -16,5 +17,17 @@ export const VotingApi = {
   getArt: async function () {
     const response = await fetch(getUrl('/art'));
     return await response.json();
+  },
+
+  vote: async function (artistId) {
+    await fetch(getUrl('/vote'), {
+      method: 'POST',
+      credentials: "include",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 'artist': artistId })
+    });
   }
 }

@@ -10,7 +10,7 @@ setup-virtual-display:
 run: run-api
 
 run-api: setup-virtual-display
-	docker compose up -d --build
+	docker compose up -d --build --remove-orphans
 
 db-migrate:
 	docker compose exec api python manage.py migrate --noinput

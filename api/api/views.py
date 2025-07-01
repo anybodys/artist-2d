@@ -11,7 +11,7 @@ def health(request):
 
 # TODO: Make this a View class and save ArtStorage on the class.
 def art(request):
-    gen = int(request.GET.get("gen", 0))
+    gen = int(request.GET.get("gen", -1))
     if gen < 0:
         gen = models.get_current_generation()
 
